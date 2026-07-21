@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MuseSkin - Bespoke luxury botanical skincare. Custom OEM & ODM formulation services with fast shipping and dermatologically proven ingredients.">
+    <meta name="keywords" content="skincare OEM, cosmetics ODM, private label skincare, botanical skincare, luxury cosmetics manufacturer, custom formulation, cruelty-free skincare, hyaluronic acid serum, ceramide cream">
+    <meta name="author" content="MuseSkin">
+    <meta name="theme-color" content="#1f3a2b">
+    <title>MUSE SKIN | Bespoke Skincare & Premium Formulations</title>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MUSE SKIN | Bespoke Skincare & Premium Formulations">
+    <meta property="og:description" content="Bespoke luxury botanical skincare. Custom OEM & ODM formulation services with fast shipping and dermatologically proven ingredients.">
+    <meta property="og:image" content="assets/hero.png">
+    <meta property="og:url" content="https://www.museskin.com">
+    <meta property="og:site_name" content="MuseSkin">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MUSE SKIN | Bespoke Skincare & Premium Formulations">
+    <meta name="twitter:description" content="Bespoke luxury botanical skincare. Custom OEM & ODM formulation services.">
+    <meta name="twitter:image" content="assets/hero.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Page Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-logo">M U S E S K I N</div>
+    </div>
+    <script>
+        // Fail-safe: never leave the loading screen covering the page.
+        window.setTimeout(function () {
+            var overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }, 1200);
+    </script>
+
+    <!-- Premium Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="top-bar-left">
+                <a href="mailto:concierge@museskin.com" class="top-bar-link">
+                    <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <span>concierge@museskin.com</span>
+                </a>
+                <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="top-bar-link">
+                    <svg class="top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                    </svg>
+                    <span>+1 (234) 567-890</span>
+                </a>
+            </div>
+            <div class="top-bar-right">
+                <!-- Social Links -->
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="Instagram">
+                    <svg class="top-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                </a>
+                <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="Pinterest">
+                    <svg class="top-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="2" x2="22" y2="6"/>
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Premium Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">M U S E S K I N</a>
+            <nav class="nav">
+                <a href="#story" class="nav-link" data-i18n="nav-story">Our Story</a>
+                <a href="#ingredients" class="nav-link" data-i18n="nav-ingredients">Ingredients</a>
+                <a href="#customization" class="nav-link" data-i18n="nav-customization">Customization</a>
+                <a href="#rituals" class="nav-link" data-i18n="nav-rituals">Rituals</a>
+                <a href="#connect" class="nav-link" data-i18n="nav-connect">Connect</a>
+            </nav>
+            <div class="header-actions">
+                <a href="#connect" class="btn btn-nav" data-i18n="btn-inquire">Inquire Now</a>
+                
+                <!-- Multi-Language Selector Dropdown -->
+                <div class="lang-selector">
+                    <button class="lang-btn" aria-label="Select Language">
+                        <span id="lang-current">EN</span>
+                        <svg class="lang-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="lang-dropdown">
+                        <a href="#" class="lang-opt active" data-lang="en">English</a>
+                        <a href="#" class="lang-opt" data-lang="cn">简体中文</a>
+                    </div>
+                </div>
+            </div>
+            <button class="mobile-nav-toggle" aria-label="Toggle Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer">
+        <nav class="mobile-nav">
+            <a href="#story" class="mobile-link" data-i18n="nav-story">Our Story</a>
+            <a href="#ingredients" class="mobile-link" data-i18n="nav-ingredients">Ingredients</a>
+            <a href="#customization" class="mobile-link" data-i18n="nav-customization">Customization</a>
+            <a href="#rituals" class="mobile-link" data-i18n="nav-rituals">Rituals</a>
+            <a href="#connect" class="mobile-link" data-i18n="nav-connect">Connect</a>
+            <a href="#connect" class="btn btn-mobile-cta" data-i18n="btn-inquire">Inquire Now</a>
+        </nav>
+    </div>
+
+    <main>
+        <!-- Interactive Showcase Slider (Hero Section) -->
+        <section class="slider-section">
+            <div class="slider-container">
+                <!-- Slide Content Wrapper -->
+                <div class="slide-content-grid">
+                    <!-- Text Side -->
+                    <div class="slide-text-side">
+                        <div class="slider-tag-pill" id="slider-pill-display">
+                            <span class="pill-dot"></span>
+                            <span id="slider-pill-text">Multi-Molecular Hyaluronic Acid</span>
+                        </div>
+                        <span class="slider-subtitle" data-i18n="slider-subtitle">Bespoke Skincare Solutions</span>
+                        <h1 class="slider-title" id="slider-title-display">The Active Serum</h1>
+                        <p class="slider-desc" id="slider-desc-display">
+                            A highly concentrated botanical elixir infused with multi-molecular hyaluronic acid and green tea antioxidants to deeply hydrate and plump the skin.
+                        </p>
+                        <div class="slider-actions">
+                            <a href="#connect" class="btn btn-primary" id="slider-cta-btn" data-i18n="slider-cta-sample">Order Sample</a>
+                            <a href="#connect" class="btn btn-secondary" data-i18n="slider-cta-consult">Get Free Consultation</a>
+                        </div>
+                    </div>
+                    <!-- Image Side -->
+                    <div class="slide-image-side">
+                        <div class="slide-image-aura" id="slider-aura"></div>
+                        <div class="slide-image-frame">
+                            <img src="assets/hero.png" alt="MuseSkin Active Serum Bottle" id="slider-image-display" class="slider-image" loading="eager" fetchpriority="high" decoding="async">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slider Navigation Tabs -->
+                <div class="slider-tabs">
+                    <div class="slider-tab active" data-index="0">
+                        <div class="tab-header">
+                            <span class="tab-number">01</span>
+                            <span class="tab-label" data-i18n="tab-1">Active Serum</span>
+                        </div>
+                        <div class="tab-progress-line"><span class="tab-progress-fill"></span></div>
+                    </div>
+                    <div class="slider-tab" data-index="1">
+                        <div class="tab-header">
+                            <span class="tab-number">02</span>
+                            <span class="tab-label" data-i18n="tab-2">Luxury Cream</span>
+                        </div>
+                        <div class="tab-progress-line"><span class="tab-progress-fill"></span></div>
+                    </div>
+                    <div class="slider-tab" data-index="2">
+                        <div class="tab-header">
+                            <span class="tab-number">03</span>
+                            <span class="tab-label" data-i18n="tab-3">Gentle Cleanser</span>
+                        </div>
+                        <div class="tab-progress-line"><span class="tab-progress-fill"></span></div>
+                    </div>
+                </div>
+                <div class="slider-controls" aria-label="Hero slider controls">
+                    <button class="slider-arrow" id="slider-prev-btn" type="button" aria-label="Previous slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </button>
+                    <div class="slider-progress-counter">
+                        <span id="slider-current-index" class="counter-num">01</span>
+                        <span class="counter-divider">/</span>
+                        <span class="counter-total">03</span>
+                    </div>
+                    <button class="slider-arrow" id="slider-next-btn" type="button" aria-label="Next slide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Bar Section [NEW] -->
+        <section class="stats-bar-section">
+            <div class="container stats-bar-container">
+                <div class="stat-item reveal-on-scroll">
+                    <span class="stat-number">17+</span>
+                    <span class="stat-label" data-i18n="stat-years">Years Formulation R&D</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal-on-scroll">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label" data-i18n="stat-formulas">Proven Actives Formulas</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal-on-scroll">
+                    <span class="stat-number">30+</span>
+                    <span class="stat-label" data-i18n="stat-countries">Countries Exported</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal-on-scroll">
+                    <span class="stat-number">ISO</span>
+                    <span class="stat-label" data-i18n="stat-cert">9001 & 14001 Certified</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brand Story Section [NEW] -->
+        <section id="story" class="story-section">
+            <div class="container story-grid">
+                <div class="story-left reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="story-subtitle">The Science of Essence</span>
+                    <h2 class="section-title" data-i18n="story-title">Crafting botanical beauty with clinical precision.</h2>
+                    <blockquote class="story-quote" data-i18n="story-quote">
+                        "Your skin has its own natural intelligence. We formulate to honor and amplify it."
+                    </blockquote>
+                    <p class="story-text" data-i18n="story-text-1">
+                        Founded in our state-of-the-art laboratory, MuseSkin bridges the gap between pure organic botanicals and rigorous clinical research. Over the past 17 years, our experts have focused on high-efficacy, clean active complexes designed to nurture skin barriers.
+                    </p>
+                    <p class="story-text" data-i18n="story-text-2">
+                        Today, we are a trusted manufacturing partner for global skincare brands, offering high-fidelity OEM/ODM services, custom textures, and certified green formulations. Every drop of MuseSkin is a testament to our dedication to purity, performance, and botanical science.
+                    </p>
+                </div>
+                <div class="story-right reveal-on-scroll">
+                    <div class="story-image-frame">
+                        <img src="assets/story.png" alt="MuseSkin Botanical Formulation Laboratory" class="story-image" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ingredients & Technology Section [NEW] -->
+        <section id="ingredients" class="ingredients-section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="ingr-subtitle">Botanical Actives</span>
+                    <h2 class="section-title" data-i18n="ingr-title">Dermatology Meets Nature</h2>
+                    <p class="section-description" data-i18n="ingr-desc">
+                        Our formulations are built around clean, bio-compatible key actives that deliver visible dermal improvements.
+                    </p>
+                </div>
+                <div class="ingredients-grid">
+                    <!-- Active 1 -->
+                    <div class="ingr-card reveal-on-scroll">
+                        <div class="ingr-icon-box">
+                            <svg class="ingr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <h3 class="ingr-card-title" data-i18n="ingr-1-title">Hyaluronic Acid</h3>
+                        <p class="ingr-card-text" data-i18n="ingr-1-text">Multi-molecular weights penetrate deep into dermal layers to bind moisture and plump cells instantly.</p>
+                    </div>
+                    <!-- Active 2 -->
+                    <div class="ingr-card reveal-on-scroll">
+                        <div class="ingr-icon-box">
+                            <svg class="ingr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="ingr-card-title" data-i18n="ingr-2-title">Organic Ceramides</h3>
+                        <p class="ingr-card-text" data-i18n="ingr-2-text">Skin-identical lipids that reconstruct the lipid barrier, sealing in hydration and locking out irritants.</p>
+                    </div>
+                    <!-- Active 3 -->
+                    <div class="ingr-card reveal-on-scroll">
+                        <div class="ingr-icon-box">
+                            <svg class="ingr-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="ingr-card-title" data-i18n="ingr-3-title">Bio-fermented Extracts</h3>
+                        <p class="ingr-card-text" data-i18n="ingr-3-text">Probiotic enzymes and fair-trade green tea antioxidants that neutralize oxidative stressors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skincare Customization Service Steps (Reference: gzln-buildingmaterials OEM/ODM Customization Steps) -->
+        <section id="customization" class="customization-section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="cust-subtitle">OEM & ODM Customization Services</span>
+                    <h2 class="section-title" data-i18n="cust-title">Your Bespoke Formulation Ritual</h2>
+                    <p class="section-description" data-i18n="cust-desc">
+                        We leverage 17 years of skincare formulation research to provide professional custom manufacturing, packaging design, and ingredient curation tailored to your brand identity.
+                    </p>
+                </div>
+
+                <div class="steps-grid">
+                    <!-- Step 1 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">01</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-1-title">Submit Requirements</h3>
+                        <p class="step-text" data-i18n="step-1-text">Share your skin types, target actives, packaging preferences, and desired budget criteria.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">02</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-2-title">Formulation & Sampling</h3>
+                        <p class="step-text" data-i18n="step-2-text">Our R&D team curates botanically active samples and mails them to your brand for trial.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">03</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-3-title">Confirm Design & Specs</h3>
+                        <p class="step-text" data-i18n="step-3-text">Finalize raw ingredients, texture viscosity, custom glass bottle specs, and branding labels.</p>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">04</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-4-title">Batch Production</h3>
+                        <p class="step-text" data-i18n="step-4-text">Deposit clearance triggers automated aseptic filling, labelling, and high-performance sealing.</p>
+                    </div>
+                    <!-- Step 5 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">05</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-5-title">Rigorous Quality Testing</h3>
+                        <p class="step-text" data-i18n="step-5-text">Every production batch undergoes 7 distinct stability and microbiological checks before release.</p>
+                    </div>
+                    <!-- Step 6 -->
+                    <div class="step-card reveal-on-scroll">
+                        <div class="step-header">
+                            <span class="step-badge" data-i18n="step-badge">Step</span>
+                            <span class="step-num">06</span>
+                        </div>
+                        <h3 class="step-title" data-i18n="step-6-title">Global Express Logistics</h3>
+                        <p class="step-text" data-i18n="step-6-text">Receive your premium inventory securely packaged and shipped directly with full custom clearance logs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Delivery & Quality Assurance Split Section (Reference: gzln-buildingmaterials) -->
+        <section id="quality" class="quality-section">
+            <div class="container quality-container">
+                <!-- Card 1: Delivery -->
+                <div class="quality-card reveal-on-scroll">
+                    <div class="quality-image-wrapper">
+                        <img src="assets/cleanser.png" alt="Fast Shipping and Eco Packaging" class="quality-image" loading="lazy">
+                    </div>
+                    <div class="quality-info">
+                        <h3 class="quality-title" data-i18n="quality-title-1">Delivery & Eco Shipment</h3>
+                        <p class="quality-desc" data-i18n="quality-desc-1">
+                            For standard formulations, we dispatch samples and batches within 5-10 business days. For customized OEM/ODM inventory, strict scheduling ensures shipping immediately upon final quality sign-off. We package only in protective, premium endlessly recyclable paper composites and luxury glass containers.
+                        </p>
+                    </div>
+                </div>
+                <!-- Card 2: Quality -->
+                <div class="quality-card reveal-on-scroll">
+                    <div class="quality-image-wrapper">
+                        <img src="assets/cream.png" alt="Aseptic Manufacturing Standards" class="quality-image" loading="lazy">
+                    </div>
+                    <div class="quality-info">
+                        <h3 class="quality-title" data-i18n="quality-title-2">Pure Ingredient Assurance</h3>
+                        <p class="quality-desc" data-i18n="quality-desc-2">
+                            We operate clean, automated cosmetics manufacturing facilities with ISO9001 and ISO14001 certification. Every raw botanical extract is supplied by premium fair-trade farms and passes 7 distinct testing stages, guaranteeing toxin-free, cruelty-free, and dermatologically approved skincare products.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signature Rituals (Cult Classics Gallery) -->
+        <section id="rituals" class="rituals-section">
+            <div class="container rituals-carousel-container">
+                <div class="section-header reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="rituals-subtitle">Rituals & Formulas</span>
+                    <h2 class="section-title" data-i18n="rituals-title">The Cult Classics</h2>
+                    <div class="ritual-filters" aria-label="Product categories">
+                        <span class="ritual-filter active" data-filter="all" data-i18n="filter-all">All Formulas</span>
+                        <span class="ritual-filter" data-filter="hydrate" data-i18n="filter-hydrate">Hydrate</span>
+                        <span class="ritual-filter" data-filter="repair" data-i18n="filter-repair">Repair</span>
+                        <span class="ritual-filter" data-filter="protect" data-i18n="filter-protect">Protect</span>
+                        <span class="ritual-filter" data-filter="body" data-i18n="filter-body">Body Rituals</span>
+                    </div>
+                </div>
+                
+                <div class="rituals-carousel reveal-on-scroll">
+                    <!-- Navigation Arrows -->
+                    <button class="carousel-nav-btn prev" id="ritual-prev-btn" aria-label="Previous Products">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-nav-btn next" id="ritual-next-btn" aria-label="Next Products">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="rituals-track-wrapper">
+                        <div class="rituals-track" id="rituals-track">
+                            <!-- Product 1 -->
+                            <div class="ritual-card-slide" data-category="hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/hero.png" alt="Active Hydrating Serum" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-1-title">The Active Serum</h3>
+                                        <span class="ritual-price">$88.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-1-desc">Plumps skin barrier and provides intense natural hydration.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Active Serum" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 2 -->
+                            <div class="ritual-card-slide" data-category="repair hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/cream.png" alt="Luxury Cream" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-2-title">The Luxury Cream</h3>
+                                        <span class="ritual-price">$95.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-2-desc">Fortifies skin cells with bio-compatible organic ceramides.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Luxury Cream" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 3 -->
+                            <div class="ritual-card-slide" data-category="hydrate protect">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/cleanser.png" alt="Gentle Cleanser" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-3-title">The Gentle Cleanser</h3>
+                                        <span class="ritual-price">$45.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-3-desc">Nourishes and purifies without removing natural oils.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Gentle Cleanser" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 4 -->
+                            <div class="ritual-card-slide" data-category="hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/toner.png" alt="Balancing Toner" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-4-title">The Balancing Toner</h3>
+                                        <span class="ritual-price">$55.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-4-desc">Balancing and refining botanical mist to prime the skin.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Balancing Toner" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 5 -->
+                            <div class="ritual-card-slide" data-category="repair">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/eyecream.png" alt="Revitalizing Eye Cream" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-5-title">The Eye Cream</h3>
+                                        <span class="ritual-price">$75.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-5-desc">Targeted peptide therapy to reduce fine lines and puffiness.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Eye Cream" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 6 -->
+                            <div class="ritual-card-slide" data-category="protect">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/sunscreen.png" alt="Protecting Sunscreen" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-6-title">The Protecting SPF</h3>
+                                        <span class="ritual-price">$48.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-6-desc">Mineral UV defense with skin-nourishing antioxidants.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Protecting SPF 50" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 7 -->
+                            <div class="ritual-card-slide" data-category="body hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/bodylotion.png" alt="Restructuring Body Lotion" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-7-title">The Body Lotion</h3>
+                                        <span class="ritual-price">$65.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-7-desc">Deeply restructuring body milk with shea butter and active ceramides.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Restructuring Body Lotion" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 8 -->
+                            <div class="ritual-card-slide" data-category="repair protect">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper">
+                                        <img src="assets/mask.png" alt="Clarifying Clay Mask" class="ritual-image" loading="lazy">
+                                    </div>
+                                    <div class="ritual-info">
+                                        <h3 class="ritual-title" data-i18n="prod-8-title">The Clay Mask</h3>
+                                        <span class="ritual-price">$58.00 USD</span>
+                                        <p class="ritual-description" data-i18n="prod-8-desc">Kaolin clay and mineral actives to clarify pores and balance oil.</p>
+                                        <a href="#connect" class="ritual-cta-btn" data-product="The Clarifying Clay Mask" data-i18n="ritual-cta">Inquire Formulation</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Product 9 -->
+                            <div class="ritual-card-slide" data-category="hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper"><img src="assets/botanical-essence.png" alt="Botanical Essence Mist" class="ritual-image" loading="lazy"></div>
+                                    <div class="ritual-info"><h3 class="ritual-title" data-i18n="prod-9-title">The Botanical Essence</h3><span class="ritual-price">$62.00 USD</span><p class="ritual-description" data-i18n="prod-9-desc">A prebiotic essence that restores softness and prepares skin for active care.</p><a href="#connect" class="ritual-cta-btn" data-product="The Botanical Essence" data-i18n="ritual-cta">Inquire Formulation</a></div>
+                                </div>
+                            </div>
+                            <!-- Product 10 -->
+                            <div class="ritual-card-slide" data-category="repair">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper"><img src="assets/peptide-lift.png" alt="Peptide Neck and Eye Treatment" class="ritual-image" loading="lazy"></div>
+                                    <div class="ritual-info"><h3 class="ritual-title" data-i18n="prod-10-title">The Peptide Lift</h3><span class="ritual-price">$82.00 USD</span><p class="ritual-description" data-i18n="prod-10-desc">A targeted peptide treatment for the delicate eye and neck contour.</p><a href="#connect" class="ritual-cta-btn" data-product="The Peptide Lift" data-i18n="ritual-cta">Inquire Formulation</a></div>
+                                </div>
+                            </div>
+                            <!-- Product 11 -->
+                            <div class="ritual-card-slide" data-category="body">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper"><img src="assets/body-elixir.png" alt="Nourishing Body Serum" class="ritual-image" loading="lazy"></div>
+                                    <div class="ritual-info"><h3 class="ritual-title" data-i18n="prod-11-title">The Body Elixir</h3><span class="ritual-price">$72.00 USD</span><p class="ritual-description" data-i18n="prod-11-desc">A silky body serum with botanical oils, ceramides, and a quiet natural scent.</p><a href="#connect" class="ritual-cta-btn" data-product="The Body Elixir" data-i18n="ritual-cta">Inquire Formulation</a></div>
+                                </div>
+                            </div>
+                            <!-- Product 12 -->
+                            <div class="ritual-card-slide" data-category="repair hydrate">
+                                <div class="ritual-card">
+                                    <div class="ritual-image-wrapper"><img src="assets/overnight-veil.png" alt="Overnight Recovery Mask" class="ritual-image" loading="lazy"></div>
+                                    <div class="ritual-info"><h3 class="ritual-title" data-i18n="prod-12-title">The Overnight Veil</h3><span class="ritual-price">$68.00 USD</span><p class="ritual-description" data-i18n="prod-12-desc">A cushioning overnight mask designed to replenish stressed, dry skin.</p><a href="#connect" class="ritual-cta-btn" data-product="The Overnight Veil" data-i18n="ritual-cta">Inquire Formulation</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section [NEW] -->
+        <section class="testimonials-section">
+            <div class="container testimonial-slider-container">
+                <div class="section-header reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="test-subtitle">Trusted Partnerships</span>
+                    <h2 class="section-title" data-i18n="test-title">Endorsements from Leading Brands</h2>
+                </div>
+                
+                <div class="testimonials-carousel reveal-on-scroll">
+                    <div class="testimonials-track-wrapper">
+                        <div class="testimonials-track">
+                            <!-- Slide 1 -->
+                            <div class="testimonial-slide">
+                                <p class="test-quote" data-i18n="test-1-quote">
+                                    "Partnering with MuseSkin transformed our product line. Their R&D team brought active organic ingredients into a stable luxury texture that our customers absolutely adore."
+                                </p>
+                                <span class="test-author">— Sarah Jenkins, Founder of L'Aura Beauty</span>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="testimonial-slide">
+                                <p class="test-quote" data-i18n="test-2-quote">
+                                    "The OEM process was completely seamless. From formulation modifications to custom glass supply sourcing, their attention to details cut our time-to-market by half."
+                                </p>
+                                <span class="test-author">— Marcus Thorne, Director of Bloom Cosmetics</span>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="testimonial-slide">
+                                <p class="test-quote" data-i18n="test-3-quote">
+                                    "Their strict quality testing and compliance documents made global export completely stress-free. Highly recommended for custom formulations."
+                                </p>
+                                <span class="test-author">— Elena Rostova, Product Director at Vesper Botanicals</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel Indicators (Dots) -->
+                    <div class="testimonial-dots">
+                        <span class="test-dot active" data-index="0"></span>
+                        <span class="test-dot" data-index="1"></span>
+                        <span class="test-dot" data-index="2"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section [NEW] -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="faq-subtitle">Common Inquiries</span>
+                    <h2 class="section-title" data-i18n="faq-title">Frequently Asked Questions</h2>
+                </div>
+                <div class="faq-accordion">
+                    <!-- FAQ Item 1 -->
+                    <div class="faq-item reveal-on-scroll">
+                        <button class="faq-trigger">
+                            <span class="faq-question" data-i18n="faq-1-q">What is your Minimum Order Quantity (MOQ)?</span>
+                            <span class="faq-toggle-icon"></span>
+                        </button>
+                        <div class="faq-answer-wrapper">
+                            <p class="faq-answer" data-i18n="faq-1-a">For our signature standard formulations, we offer a flexible MOQ starting from just 100 units. Custom bespoke formulas requiring unique ingredient curation start at 1,000 units.</p>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 2 -->
+                    <div class="faq-item reveal-on-scroll">
+                        <button class="faq-trigger">
+                            <span class="faq-question" data-i18n="faq-2-q">Do you support international certifications?</span>
+                            <span class="faq-toggle-icon"></span>
+                        </button>
+                        <div class="faq-answer-wrapper">
+                            <p class="faq-answer" data-i18n="faq-2-a">Yes. Our facilities run under strict ISO9001 and ISO14001 guidelines. We provide complete SGS, COA parameter analysis sheets, and MSDS safety documentation for customs clearance worldwide.</p>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 3 -->
+                    <div class="faq-item reveal-on-scroll">
+                        <button class="faq-trigger">
+                            <span class="faq-question" data-i18n="faq-3-q">What is the typical production timeline?</span>
+                            <span class="faq-toggle-icon"></span>
+                        </button>
+                        <div class="faq-answer-wrapper">
+                            <p class="faq-answer" data-i18n="faq-3-a">Sample formulations are mixed and dispatched within 5-7 business days. Batch production ranges from 15 to 25 days depending on packaging custom specifications and ingredient volume.</p>
+                        </div>
+                    </div>
+                    <!-- FAQ Item 4 -->
+                    <div class="faq-item reveal-on-scroll">
+                        <button class="faq-trigger">
+                            <span class="faq-question" data-i18n="faq-4-q">Can we provide our own packaging elements?</span>
+                            <span class="faq-toggle-icon"></span>
+                        </button>
+                        <div class="faq-answer-wrapper">
+                            <p class="faq-answer" data-i18n="faq-4-a">Certainly. You may ship your pre-printed bottles, tubes, or boxes to our aseptic manufacturing facility, where our automated lines handle precise filling and sealing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner Section [NEW] -->
+        <section class="cta-banner-section reveal-on-scroll">
+            <div class="container cta-banner-container">
+                <div class="cta-banner-content">
+                    <h2 class="cta-banner-title" data-i18n="cta-banner-title">Ready to Create Your Signature Skincare Line?</h2>
+                    <p class="cta-banner-desc" data-i18n="cta-banner-desc">Collaborate with our chemical scientists to design botanically advanced skincare formulations customized for your brand demographics.</p>
+                    <a href="#connect" class="btn btn-primary btn-cta-inverse" data-i18n="cta-banner-btn">Get Started Now</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lead-Generation Connect Section (Reference: gzln-buildingmaterials split form layout) -->
+        <section id="connect" class="connect-section">
+            <div class="container connect-grid">
+                <!-- Left Side: Promises & Expert info -->
+                <div class="connect-info-panel reveal-on-scroll">
+                    <span class="section-subtitle" data-i18n="connect-subtitle">Skincare Consultation</span>
+                    <h2 class="section-title" data-i18n="connect-title">Begin Your Customized Skincare Journey</h2>
+                    <p class="connect-text" data-i18n="connect-text">
+                        Specify your skin objectives, brand goals, or sample requests. Our formulation experts will respond with tailored strategies and quotes within 24 hours.
+                    </p>
+                    
+                    <div class="promises-list">
+                        <div class="promise-item">
+                            <svg class="promise-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span data-i18n="promise-1">Dedicated aesthetician & formulator assigned to your request.</span>
+                        </div>
+                        <div class="promise-item">
+                            <svg class="promise-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span data-i18n="promise-2">Complete product parameter guides and certs delivered instantly.</span>
+                        </div>
+                        <div class="promise-item">
+                            <svg class="promise-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span data-i18n="promise-3">Free sample pack options for certified brands and wholesalers.</span>
+                        </div>
+                    </div>
+
+                    <div class="direct-channels">
+                        <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="connect-channel-link">
+                            <svg class="channel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                            <span data-i18n="whatsapp-connect">WhatsApp Consultation: +1 (234) 567-890</span>
+                        </a>
+                        <a href="mailto:concierge@museskin.com" class="connect-channel-link">
+                            <svg class="channel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span>concierge@museskin.com</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side: Clean Form -->
+                <div class="connect-form-panel reveal-on-scroll">
+                    <form id="contact-form" action="https://formspree.io/f/placeholder" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name" class="form-label" data-i18n="form-label-name">Full Name</label>
+                                <input type="text" id="name" name="name" class="form-input" placeholder="Evelyn Carter" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label" data-i18n="form-label-email">Email Address *</label>
+                                <input type="email" id="email" name="email" class="form-input" placeholder="evelyn@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="whatsapp" class="form-label" data-i18n="form-label-phone">WhatsApp/Phone</label>
+                                <input type="text" id="whatsapp" name="whatsapp" class="form-input" placeholder="+1 (234) 567-890">
+                            </div>
+                            <div class="form-group">
+                                <label for="country" class="form-label" data-i18n="form-label-country">Country or Area Code *</label>
+                                <input type="text" id="country" name="country" class="form-input" placeholder="United States" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="interest" class="form-label" data-i18n="form-label-interest">Subject of Interest</label>
+                            <select id="interest" name="interest" class="form-select">
+                                <option value="Bespoke Skincare Consultation" data-i18n="interest-opt-1">Bespoke Skincare Consultation</option>
+                                <option value="The Active Serum" data-i18n="interest-opt-2">OEM/ODM Inquiry: The Active Serum</option>
+                                <option value="The Luxury Cream" data-i18n="interest-opt-3">OEM/ODM Inquiry: The Luxury Cream</option>
+                                <option value="The Gentle Cleanser" data-i18n="interest-opt-4">OEM/ODM Inquiry: The Gentle Cleanser</option>
+                                <option value="The Balancing Toner" data-i18n="interest-opt-6">OEM/ODM Inquiry: The Balancing Toner</option>
+                                <option value="The Eye Cream" data-i18n="interest-opt-7">OEM/ODM Inquiry: The Eye Cream</option>
+                                <option value="The Protecting SPF 50" data-i18n="interest-opt-8">OEM/ODM Inquiry: The Protecting SPF 50</option>
+                                <option value="The Restructuring Body Lotion" data-i18n="interest-opt-9">OEM/ODM Inquiry: The Restructuring Body Lotion</option>
+                                <option value="The Clarifying Clay Mask" data-i18n="interest-opt-10">OEM/ODM Inquiry: The Clarifying Clay Mask</option>
+                                <option value="Wholesale & Bulk Ingredients" data-i18n="interest-opt-5">Wholesale & Bulk Ingredients</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label" data-i18n="form-label-message">Enter your needs, such as custom ingredients, volume, or timeline *</label>
+                            <textarea id="message" name="message" rows="4" class="form-textarea" placeholder="Describe your skincare objectives or required samples..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            <span data-i18n="form-btn-submit">Send Inquiry</span>
+                            <svg class="submit-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </form>
+                    <div id="form-success" class="form-feedback success-message">
+                        <h3 class="feedback-title" data-i18n="form-success-title">Thank You</h3>
+                        <p data-i18n="form-success-text">Your skincare requirements have been logged securely. A formulation expert will follow up within 24 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <span class="footer-logo">M U S E S K I N</span>
+                <p class="footer-tagline" data-i18n="footer-tagline">Formulated with 17 years of botanical science to honor your skin's intelligence.</p>
+            </div>
+            <div class="footer-links-group">
+                <a href="#story" data-i18n="nav-story">Our Story</a>
+                <a href="#ingredients" data-i18n="nav-ingredients">Ingredients</a>
+                <a href="#customization" data-i18n="nav-customization">Customization</a>
+                <a href="#rituals" data-i18n="nav-rituals">Rituals</a>
+                <a href="#connect" data-i18n="nav-connect">Connect</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 MuseSkin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Widget -->
+    <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="whatsapp-float" id="whatsapp-float-btn" aria-label="Chat on WhatsApp">
+        <svg class="whatsapp-float-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+        <span class="whatsapp-float-tooltip" data-i18n="whatsapp-float-tooltip">Chat with us</span>
+    </a>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top-btn" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast-notification">
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span class="toast-text" id="toast-text"></span>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

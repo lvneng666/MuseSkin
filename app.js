@@ -1,9 +1,318 @@
 /* -------------------------------------------------------------
  * MUSE SKIN - Interactive Logic & Translation Engine
- * Features: Multi-Language Switcher, Showcase Slider, Scroll Reveal
  * ------------------------------------------------------------- */
 
+// 全局集中配置项 (方便随时修改真实联系方式与后端 API)
+const SITE_CONFIG = {
+    email: "concierge@museskin.com",
+    phone: "+1 (234) 567-890",
+    whatsapp: "+1 (234) 567-890",
+    whatsappLink: "https://wa.me/1234567890",
+    formspreeEndpoint: "https://formspree.io/f/placeholder" // 替换为真实的 Formspree Endpoint 如 "https://formspree.io/f/xxxx"
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    // 12 款 Cult Classics 产品在中英文环境下的元数据明细（供 Quick View Modal 弹窗使用）
+    const PRODUCT_DATA = {
+        "The Active Serum": {
+            en: {
+                category: "Hydrate & Revitalize",
+                title: "The Active Serum",
+                price: "$88.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "A highly concentrated botanical elixir infused with multi-molecular hyaluronic acid and green tea antioxidants to deeply hydrate and plump dermal layers.",
+                actives: "Multi-Molecular Hyaluronic Acid (1.5%), Organic Green Tea Ferment, Bio-Ceramides",
+                skin: "Dry, dehydrated, combination, or tired skin seeking barrier hydration.",
+                usage: "Smooth 3-4 drops onto clean skin morning and evening prior to moisture seal."
+            },
+            cn: {
+                category: "水润修护",
+                title: "活力精华液",
+                price: "$88.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "高浓度植萃水润精华，富含多重分子量的玻尿酸与绿茶抗氧因子，由内而外深层锁水充盈。",
+                actives: "多重分子量玻尿酸 (1.5%)、有机绿茶发酵物、仿生神经酰胺",
+                skin: "干性、缺水性、混合性及缺乏光泽的肌肤。",
+                usage: "早晚洁面后，取 3-4 滴轻轻涂抹于面部与颈部，随后配合面霜锁水。"
+            }
+        },
+        "The Luxury Cream": {
+            en: {
+                category: "Barrier Repair",
+                title: "The Luxury Cream",
+                price: "$95.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "A velvet cushioning moisturizer engineered with skin-identical lipids to fortify the lipid barrier against environmental stressors.",
+                actives: "Organic Ceramide NP/AP/EOP, Cold-pressed Jojoba Seed Butter, Squalane",
+                skin: "Sensitized, barrier-compromised, or mature dry skin.",
+                usage: "Warm a pea-sized amount between palms and press gently into face and neck."
+            },
+            cn: {
+                category: "屏障修护",
+                title: "奢华面霜",
+                price: "$95.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "如丝绒般高能滋养的修护面霜，蕴含亲肤皮脂成分，强效固锁水份并抵御外界刺激。",
+                actives: "有机神经酰胺复合物、冷压霍霍巴籽脂、植物角鲨烷",
+                skin: "敏感肌、屏障受损及干性成熟肌肤。",
+                usage: "取适量于掌心预热后，轻轻按压于面部及颈部直至吸收。"
+            }
+        },
+        "The Gentle Cleanser": {
+            en: {
+                category: "Purify & Cleanse",
+                title: "The Gentle Cleanser",
+                price: "$45.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "A low-foaming amino acid botanical milk that dissolves impurities without stripping moisture balances.",
+                actives: "Coconut Amino Acid Surfactants, Chamomile Extract, Glycerin",
+                skin: "All skin types, including highly sensitive skin.",
+                usage: "Massage 1-2 pumps onto damp skin in circular motions, rinse thoroughly with tepid water."
+            },
+            cn: {
+                category: "温和洁净",
+                title: "温和洁面乳",
+                price: "$45.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "氨基酸温和植物洁面乳，柔和净化油脂杂质，洗后水润不紧绷。",
+                actives: "椰油酰氨基酸表面活性剂、洋甘菊提取物、高纯甘油",
+                skin: "所有肤质，尤其适合极度敏感肌肤。",
+                usage: "取 1-2 泵于湿润的掌心打出细腻泡沫，圆周按摩面部后用温水冲洗。"
+            }
+        },
+        "The Balancing Toner": {
+            en: {
+                category: "Refine & Hydrate",
+                title: "The Balancing Toner",
+                price: "$55.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "A botanical essence mist that refines pore texture and restores optimal pH balance after cleansing.",
+                actives: "Rose Damascena Water, Niacinamide (2%), Witch Hazel hydrosol",
+                skin: "Combination, oily, and enlarged pore textures.",
+                usage: "Mist directly onto clean skin or press in with cotton pad before serum."
+            },
+            cn: {
+                category: "平衡调理",
+                title: "平衡爽肤水",
+                price: "$55.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "细致毛孔的植物精华喷雾，迅速恢复肌底弱酸性 pH 平衡并二次补水。",
+                actives: "大马士革玫瑰纯露、烟酰胺 (2%)、北美金缕梅提取物",
+                skin: "混合性、油性及毛孔粗大肌肤。",
+                usage: "洁面后直接喷于面部，或用棉片轻按浸润面部。"
+            }
+        },
+        "The Eye Cream": {
+            en: {
+                category: "Eye Repair",
+                title: "The Eye Cream",
+                price: "$75.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Targeted peptide infusion designed to diminish dark circles, smooth fine expression lines, and reduce puffiness.",
+                actives: "Acetyl Tetrapeptide-5, Caffeine Complex, Marine Collagen",
+                skin: "Delicate eye contours with fine lines or fatigue.",
+                usage: "Dab gently around the orbital bone with ring finger twice daily."
+            },
+            cn: {
+                category: "眼部护理",
+                title: "修护眼霜",
+                price: "$75.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "高能多肽眼部修护霜，有效改善黑眼圈、淡化细纹并舒缓眼部浮肿。",
+                actives: "乙基四肽-5、咖啡因活性复合物、深海胶原蛋白",
+                skin: "眼周有细纹、暗沉及浮肿困扰的肌肤。",
+                usage: "用无名指点涂于眼周骨骼周围，轻柔点按至完全吸收。"
+            }
+        },
+        "The Protecting SPF": {
+            en: {
+                category: "UV Protection",
+                title: "The Protecting SPF 50",
+                price: "$48.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Invisible non-greasy mineral sunscreen providing broad-spectrum UVA/UVB shield with antioxidant benefits.",
+                actives: "Non-Nano Zinc Oxide (18%), Vitamin E, Alpine Flower Complex",
+                skin: "All skin types exposed to daily sunlight.",
+                usage: "Apply generously 15 minutes before sun exposure as the final step of routine."
+            },
+            cn: {
+                category: "日常防护",
+                title: "清透防晒乳 SPF 50",
+                price: "$48.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "轻薄隐形的物理防晒乳，提供全波段 UVA/UVB 防护，清爽抗氧化。",
+                actives: "非纳米氧化锌 (18%)、维生素 E、高山雪绒花复合物",
+                skin: "所有需要日光防护的肤质。",
+                usage: "出门前 15 分钟均匀涂抹于面部及暴露部位，作为护肤最后一步。"
+            }
+        },
+        "The Body Lotion": {
+            en: {
+                category: "Body Care",
+                title: "The Restructuring Body Lotion",
+                price: "$65.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Rich restructuring body milk with shea butter and lipid ceramides for long-lasting body hydration.",
+                actives: "Organic Shea Butter, Sunflower Seed Oil, Ceramide NP",
+                skin: "Dry or flaky body skin.",
+                usage: "Smooth over warm body after shower or bath."
+            },
+            cn: {
+                category: "身体护理",
+                title: "倍润身体乳",
+                price: "$65.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "富含乳木果油与神经酰胺的倍润身体乳，长效锁水，软化角质。",
+                actives: "有机乳木果油、葵花籽油、神经酰胺 NP",
+                skin: "全身干燥起皮及缺乏弹性的肌肤。",
+                usage: "沐浴后取适量均匀涂抹于全身肌肤。"
+            }
+        },
+        "The Clay Mask": {
+            en: {
+                category: "Detox & Purify",
+                title: "The Clarifying Clay Mask",
+                price: "$58.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Purifying Kaolin clay infused with botanical extracts to draw out impurities and regulate sebum.",
+                actives: "White Kaolin Clay, Salicylic Acid (0.5%), Tea Tree Hydrosol",
+                skin: "Congested, oily, or acne-prone skin.",
+                usage: "Apply an even layer for 10-15 minutes, rinse before completely dry."
+            },
+            cn: {
+                category: "深层净化",
+                title: "矿物洁净泥膜",
+                price: "$58.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "高岭土矿物净肤泥膜，深层吸附毛孔污垢，平衡油脂分泌。",
+                actives: "高纯白高岭土、水杨酸 (0.5%)、茶树纯露",
+                skin: "毛孔堵塞、油脂分泌旺盛及易长粉刺的肌肤。",
+                usage: "敷于面部 10-15 分钟，在泥膜未完全干透前用温水洗净。"
+            }
+        },
+        "The Botanical Essence": {
+            en: {
+                category: "Prebiotic Essence",
+                title: "The Botanical Essence",
+                price: "$62.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Prebiotic liquid essence that primes skin barrier and enhances absorption of active treatments.",
+                actives: "Bifida Ferment Lysate, Centella Asiatica Extract",
+                skin: "Sensitive and impaired barrier conditions.",
+                usage: "Pat onto skin with clean palms."
+            },
+            cn: {
+                category: "肌底养护",
+                title: "植萃精华水",
+                price: "$62.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "益生元调理精华水，舒缓肌肤并促进后续营养成分的高效吸收。",
+                actives: "二裂酵母发酵产物溶胞物、积雪草提取物",
+                skin: "屏障脆弱及吸收力不佳的肌肤。",
+                usage: "取适量于掌心轻按至吸收。"
+            }
+        },
+        "The Peptide Lift": {
+            en: {
+                category: "Firming Therapy",
+                title: "The Peptide Lift",
+                price: "$82.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Firming concentrate focused on contour definition across neck and jawline.",
+                actives: "Palmitoyl Tripeptide-5, Copper Peptides",
+                skin: "Sagging or aging neck & lower face skin.",
+                usage: "Massage upwards along neck and jawline."
+            },
+            cn: {
+                category: "紧致提拉",
+                title: "多肽紧致护理",
+                price: "$82.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "专注下颌线与颈部紧致的胜肽浓缩液，改善皮肤松弛状况。",
+                actives: "棕榈酰三肽-5、蓝铜胜肽复合物",
+                skin: "出现松弛纹路及轮廓减退的成熟肌。",
+                usage: "沿颈部与下颌线由下向上按摩吸收。"
+            }
+        },
+        "The Body Elixir": {
+            en: {
+                category: "Luxe Oil Care",
+                title: "The Body Elixir",
+                price: "$72.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Silky botanical body serum oil providing radiant sheen without greasy residue.",
+                actives: "Rosehip Fruit Oil, Argan Kernel Oil, Vitamin E",
+                skin: "Dull, very dry skin.",
+                usage: "Massage onto clean damp skin."
+            },
+            cn: {
+                category: "奢润体油",
+                title: "身体精华乳",
+                price: "$72.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "丝滑植物身体精华油，赋予皮肤亮泽质感，滋润不黏腻。",
+                actives: "玫瑰果油、摩洛哥坚果油、天然维生素 E",
+                skin: "暗沉、极度干枯的身体肌。",
+                usage: "沐浴后趁微湿涂抹按摩。"
+            }
+        },
+        "The Overnight Veil": {
+            en: {
+                category: "Overnight Repair",
+                title: "The Overnight Veil",
+                price: "$68.00 USD",
+                moq: "MOQ: 100 units",
+                desc: "Nourishing sleep mask that locks in nutrients all night long for glowy morning skin.",
+                actives: "Squalane, Hyaluronic Acid, Lavender Oil",
+                skin: "Dehydrated, stressed overnight care.",
+                usage: "Apply as final nighttime step, rinse in morning."
+            },
+            cn: {
+                category: "夜间修护",
+                title: "夜间修护面膜",
+                price: "$68.00 USD",
+                moq: "起订量: 100 瓶",
+                desc: "睡眠锁水面膜，在整夜休息中持续注入营养，清晨焕发丰润光采。",
+                actives: "角鲨烷、玻尿酸、薰衣草植物精油",
+                skin: "疲惫、熬夜及缺水肌。",
+                usage: "夜间护肤最后一步涂抹薄层，次日清晨洗净。"
+            }
+        }
+    };
+
+    // --- Dynamically Apply SITE_CONFIG to all HTML DOM Elements ---
+    const initSiteConfig = () => {
+        // Update Mailto Links
+        document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+            el.href = `mailto:${SITE_CONFIG.email}`;
+            const textNode = el.querySelector('span');
+            if (textNode && textNode.textContent.includes('@')) {
+                textNode.textContent = SITE_CONFIG.email;
+            }
+        });
+
+        // Update WhatsApp Links & Text
+        document.querySelectorAll('a[href^="https://wa.me/"]').forEach(el => {
+            el.href = SITE_CONFIG.whatsappLink;
+            const textNode = el.querySelector('span');
+            if (textNode && textNode.textContent.includes('WhatsApp')) {
+                if (currentLang === 'cn') {
+                    textNode.textContent = `WhatsApp 业务咨询: ${SITE_CONFIG.phone}`;
+                } else {
+                    textNode.textContent = `WhatsApp Consultation: ${SITE_CONFIG.phone}`;
+                }
+            }
+        });
+
+        // Update Form Action if non-placeholder
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm && SITE_CONFIG.formspreeEndpoint && !SITE_CONFIG.formspreeEndpoint.includes('placeholder')) {
+            contactForm.action = SITE_CONFIG.formspreeEndpoint;
+        }
+    };
+
+    // --- Translation Dictionary ---
 
     // --- Translation Dictionary ---
     const translations = {
@@ -375,8 +684,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Re-sync Showcase slider descriptions
+        // Re-sync Showcase slider descriptions (handles dynamic elements without data-i18n)
         updateShowcaseData(lang);
+        initSiteConfig();
     };
 
     // --- Dynamic Slider Showcase Data By Language ---
@@ -441,16 +751,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeTab = document.querySelector('.slider-tab.active');
         const activeIndex = activeTab ? parseInt(activeTab.getAttribute('data-index')) : 0;
         const currentData = showcaseProducts[activeIndex];
+        if (!currentData) return;
+
+        // Quick crossfade for language switch (no stagger, just clean swap)
         const titleEl = document.getElementById('slider-title-display');
         const descEl = document.getElementById('slider-desc-display');
         const imageEl = document.getElementById('slider-image-display');
         const ctaBtn = document.getElementById('slider-cta-btn');
         const pillTextEl = document.getElementById('slider-pill-text');
         const auraEl = document.getElementById('slider-aura');
-        
-        if (titleEl && descEl && currentData) {
-            titleEl.textContent = currentData.title;
-            descEl.textContent = currentData.desc;
+
+        // Fade out
+        [titleEl, descEl, pillTextEl].forEach(el => {
+            if (el) { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; }
+        });
+
+        setTimeout(() => {
+            if (titleEl) titleEl.textContent = currentData.title;
+            if (descEl) descEl.textContent = currentData.desc;
             if (pillTextEl && currentData.pill) pillTextEl.textContent = currentData.pill;
             if (auraEl && currentData.auraGlow) auraEl.style.background = currentData.auraGlow;
             if (imageEl) {
@@ -458,7 +776,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageEl.alt = `MuseSkin ${currentData.title}`;
             }
             if (ctaBtn) ctaBtn.setAttribute('data-product', currentData.target);
-        }
+
+            // Fade in
+            [titleEl, descEl, pillTextEl].forEach((el, i) => {
+                if (el) {
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, i * 60);
+                }
+            });
+        }, 250);
     };
 
     // Bind Click Events to Language Selectors
@@ -630,7 +958,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sliderPrevBtn) sliderPrevBtn.addEventListener('click', goToPrevSlide);
     if (sliderNextBtn) sliderNextBtn.addEventListener('click', goToNextSlide);
 
-    const pauseTargets = document.querySelectorAll('.slider-tabs, .slider-controls, .slide-image-side');
+    // Pause auto-slide when hovering over tabs, controls, or image area
+    const pauseTargets = document.querySelectorAll('.slider-tabs, .slider-controls, .slide-image-side, .slide-text-side');
     pauseTargets.forEach(el => {
         el.addEventListener('mouseenter', () => { isSliderHovered = true; });
         el.addEventListener('mouseleave', () => { isSliderHovered = false; });
@@ -640,7 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
     switchLanguage('en');
     startAutoSlide();
     resetProgressBar(0);
-    handleScroll(); // Check initially
 
     // --- 2. Mobile Drawer Navigation ---
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
@@ -923,7 +1251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         guidance.className = 'success-guidance';
                         guidance.innerHTML = `
                             <p class="success-guidance-title">${currentLang === 'cn' ? '更快速的联系方式' : 'Even faster ways to reach us'}</p>
-                            <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" class="success-guidance-btn">
+                            <a href="${SITE_CONFIG.whatsappLink}" target="_blank" rel="noopener noreferrer" class="success-guidance-btn">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
                                 </svg>
@@ -1126,7 +1454,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // --- 11. Discrete-Step Product Carousel & Filter Controller ---
+    // --- 11. Continuous Product Marquee & Filter Controller ---
     const ritualsTrack = document.getElementById('rituals-track');
     const ritualsCarousel = document.querySelector('.rituals-carousel');
     const ritualPrevBtn = document.getElementById('ritual-prev-btn');
@@ -1134,135 +1462,145 @@ document.addEventListener('DOMContentLoaded', () => {
     const ritualFilters = document.querySelectorAll('.ritual-filter');
 
     if (ritualsTrack) {
-        const allOriginalSlides = Array.from(ritualsTrack.querySelectorAll('.ritual-card-slide:not(.is-clone)'));
-        let carouselIndex = 0;
-        let activeCategory = 'all';
-        let carouselAutoTimer = null;
-        let isCarouselHovered = false;
+        const originalSlides = Array.from(ritualsTrack.querySelectorAll('.ritual-card-slide'));
 
-        // Clone slides for seamless infinite loop
-        allOriginalSlides.forEach(slide => {
-            const clone = slide.cloneNode(true);
-            clone.classList.add('is-clone');
-            ritualsTrack.appendChild(clone);
-        });
-
-        const getVisibleCount = () => {
-            if (window.innerWidth <= 768) return 1;
-            if (window.innerWidth <= 1024) return 2;
-            return 3;
-        };
-
-        const getFilteredSlides = () => {
-            return Array.from(ritualsTrack.querySelectorAll('.ritual-card-slide')).filter(slide => {
-                const cat = slide.getAttribute('data-category') || '';
-                return activeCategory === 'all' || cat.includes(activeCategory);
+        // Extra cycles keep the marquee seamless even when a filter leaves only one product.
+        for (let cycle = 0; cycle < 4; cycle += 1) {
+            originalSlides.forEach(slide => {
+                const clone = slide.cloneNode(true);
+                clone.classList.add('is-clone');
+                ritualsTrack.appendChild(clone);
             });
-        };
-
-        const getStepWidth = () => {
-            const slide = ritualsTrack.querySelector('.ritual-card-slide');
-            if (!slide) return 270;
-            return slide.offsetWidth + 20; // card width + gap
-        };
-
-        const updateCarouselPosition = (animate = true) => {
-            const filtered = getFilteredSlides();
-            const visibleCount = getVisibleCount();
-            const stepWidth = getStepWidth();
-            const maxIndex = Math.max(0, filtered.length - visibleCount);
-
-            // Clamp index
-            if (carouselIndex > maxIndex) carouselIndex = 0;
-            if (carouselIndex < 0) carouselIndex = maxIndex;
-
-            // Show/hide slides based on filter
-            const allSlides = ritualsTrack.querySelectorAll('.ritual-card-slide');
-            allSlides.forEach(slide => {
-                const cat = slide.getAttribute('data-category') || '';
-                if (activeCategory === 'all' || cat.includes(activeCategory)) {
-                    slide.classList.remove('is-hidden');
-                } else {
-                    slide.classList.add('is-hidden');
-                }
-            });
-
-            // Calculate offset from visible (non-hidden) slides before current index
-            let offsetPx = 0;
-            for (let i = 0; i < carouselIndex; i++) {
-                if (filtered[i]) offsetPx += stepWidth;
-            }
-
-            ritualsTrack.style.transition = animate ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
-            ritualsTrack.style.transform = `translate3d(${-offsetPx}px, 0, 0)`;
-        };
-
-        const goToNext = () => {
-            const filtered = getFilteredSlides();
-            const visibleCount = getVisibleCount();
-            const maxIndex = Math.max(0, filtered.length - visibleCount);
-            carouselIndex = carouselIndex >= maxIndex ? 0 : carouselIndex + 1;
-            updateCarouselPosition();
-        };
-
-        const goToPrev = () => {
-            const filtered = getFilteredSlides();
-            const visibleCount = getVisibleCount();
-            const maxIndex = Math.max(0, filtered.length - visibleCount);
-            carouselIndex = carouselIndex <= 0 ? maxIndex : carouselIndex - 1;
-            updateCarouselPosition();
-        };
-
-        // Auto-advance every 5 seconds
-        const startCarouselAuto = () => {
-            stopCarouselAuto();
-            carouselAutoTimer = setInterval(() => {
-                if (!isCarouselHovered) goToNext();
-            }, 5000);
-        };
-
-        const stopCarouselAuto = () => {
-            if (carouselAutoTimer) {
-                clearInterval(carouselAutoTimer);
-                carouselAutoTimer = null;
-            }
-        };
-
-        // Pause on hover
-        if (ritualsCarousel) {
-            ritualsCarousel.addEventListener('mouseenter', () => { isCarouselHovered = true; });
-            ritualsCarousel.addEventListener('mouseleave', () => { isCarouselHovered = false; });
         }
+
+        const allSlides = Array.from(ritualsTrack.querySelectorAll('.ritual-card-slide'));
+        let activeCategory = 'all';
+        let marqueeOffset = 0;
+        let manualTarget = null;
+        let loopWidth = 0;
+        let cardWidth = 0;
+        let lastFrameTime = 0;
+        const marqueeSpeed = 22; // pixels per second
+
+        const getColumns = () => {
+            const value = getComputedStyle(ritualsCarousel).getPropertyValue('--ritual-columns');
+            return Math.max(1, Number.parseInt(value, 10) || 1);
+        };
+
+        const getVisibleOriginals = () => originalSlides.filter(slide => slide.style.display !== 'none');
+
+        const updateMeasurements = () => {
+            cardWidth = ritualsTrack.parentElement.clientWidth / getColumns();
+            ritualsCarousel.style.setProperty('--ritual-card-width', `${cardWidth}px`);
+            loopWidth = getVisibleOriginals().length * cardWidth;
+        };
+
+        const normalizeOffset = () => {
+            if (!loopWidth) return;
+            while (marqueeOffset <= -loopWidth) marqueeOffset += loopWidth;
+            while (marqueeOffset > 0) marqueeOffset -= loopWidth;
+        };
+
+        const renderMarquee = () => {
+            ritualsTrack.style.transform = `translate3d(${marqueeOffset}px, 0, 0)`;
+        };
+
+        const nudgeByOneProduct = (direction) => {
+            if (!cardWidth || !loopWidth) return;
+            const baseTarget = manualTarget === null ? marqueeOffset : manualTarget;
+            if (direction > 0 && baseTarget + cardWidth > 0) {
+                marqueeOffset -= loopWidth;
+                if (manualTarget !== null) manualTarget -= loopWidth;
+            }
+            manualTarget = (manualTarget === null ? marqueeOffset : manualTarget) + direction * cardWidth;
+        };
+
+        const marqueeLoop = (time) => {
+            const delta = lastFrameTime ? Math.min(time - lastFrameTime, 50) : 0;
+            lastFrameTime = time;
+
+            if (!document.hidden) {
+                if (manualTarget !== null) {
+                    const distance = manualTarget - marqueeOffset;
+                    marqueeOffset += distance * Math.min(1, delta / 140);
+                    if (Math.abs(distance) < 0.5) {
+                        marqueeOffset = manualTarget;
+                        manualTarget = null;
+                        normalizeOffset();
+                    }
+                } else {
+                    marqueeOffset -= marqueeSpeed * (delta / 1000);
+                    normalizeOffset();
+                }
+                renderMarquee();
+            }
+
+            window.requestAnimationFrame(marqueeLoop);
+        };
+
+        const applyFilter = (category) => {
+            activeCategory = category;
+            allSlides.forEach(slide => {
+                const categories = slide.getAttribute('data-category') || '';
+                slide.style.display = category === 'all' || categories.includes(category) ? '' : 'none';
+            });
+            marqueeOffset = 0;
+            manualTarget = null;
+            updateMeasurements();
+            renderMarquee();
+        };
 
         // Category filter buttons
         ritualFilters.forEach(filter => {
             filter.addEventListener('click', () => {
                 ritualFilters.forEach(f => f.classList.remove('active'));
                 filter.classList.add('active');
-                activeCategory = filter.getAttribute('data-filter') || 'all';
-                carouselIndex = 0;
-                updateCarouselPosition();
-                startCarouselAuto();
+                const cat = filter.getAttribute('data-filter') || 'all';
+                applyFilter(cat);
             });
         });
 
-        // Prev/Next buttons
-        if (ritualPrevBtn) ritualPrevBtn.addEventListener('click', () => { stopCarouselAuto(); goToPrev(); startCarouselAuto(); });
-        if (ritualNextBtn) ritualNextBtn.addEventListener('click', () => { stopCarouselAuto(); goToNext(); startCarouselAuto(); });
+        if (ritualPrevBtn) {
+            ritualPrevBtn.addEventListener('click', () => nudgeByOneProduct(1));
+        }
+        if (ritualNextBtn) {
+            ritualNextBtn.addEventListener('click', () => nudgeByOneProduct(-1));
+        }
 
-        // Mobile swipe support
+        // Touch swipe support
         addSwipeListener(
-            ritualsTrack,
-            () => { stopCarouselAuto(); goToNext(); startCarouselAuto(); },
-            () => { stopCarouselAuto(); goToPrev(); startCarouselAuto(); }
+            ritualsTrack.parentElement,
+            () => nudgeByOneProduct(-1),
+            () => nudgeByOneProduct(1)
         );
 
-        // Handle resize
-        window.addEventListener('resize', () => { updateCarouselPosition(false); });
+        if (ritualsCarousel) {
+            ritualsCarousel.tabIndex = 0;
+            ritualsCarousel.addEventListener('keydown', event => {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    nudgeByOneProduct(1);
+                }
+                if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    nudgeByOneProduct(-1);
+                }
+            });
+        }
 
-        // Initialize
-        updateCarouselPosition(false);
-        startCarouselAuto();
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(() => {
+                marqueeOffset = 0;
+                manualTarget = null;
+                updateMeasurements();
+                renderMarquee();
+            }, 120);
+        });
+
+        applyFilter(activeCategory);
+        window.requestAnimationFrame(marqueeLoop);
     }
 
     // --- 12. Image Skeleton Loading ---
@@ -1289,4 +1627,127 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     initImageSkeletons();
+
+    // --- 13. URL Language Query Parameter Initializer ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+    if (langParam === 'cn' || langParam === 'zh') {
+        switchLanguage('cn');
+    } else if (langParam === 'en') {
+        switchLanguage('en');
+    }
+
+    // --- 14. Product Quick View Modal & Form Pre-fill Controller ---
+    const productModal = document.getElementById('product-quick-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalInquireBtn = document.getElementById('modal-inquire-btn');
+    let activeModalProductName = '';
+
+    const openProductModal = (productKey) => {
+        if (!productModal) return;
+        const data = PRODUCT_DATA[productKey];
+        if (!data) return;
+
+        const langData = data[currentLang] || data['en'];
+        activeModalProductName = productKey;
+
+        // Populate modal fields
+        document.getElementById('modal-product-category').textContent = langData.category;
+        document.getElementById('modal-product-title').textContent = langData.title;
+        document.getElementById('modal-product-price').textContent = langData.price;
+        document.getElementById('modal-product-moq').textContent = langData.moq;
+        document.getElementById('modal-product-desc').textContent = langData.desc;
+        document.getElementById('modal-product-actives').textContent = langData.actives;
+        document.getElementById('modal-product-skin').textContent = langData.skin;
+        document.getElementById('modal-product-usage').textContent = langData.usage;
+
+        // Match image based on title
+        const cardImg = document.querySelector(`.ritual-card-slide [data-product="${productKey}"]`)
+                     ?.closest('.ritual-card')?.querySelector('.ritual-image');
+        if (cardImg) {
+            document.getElementById('modal-product-img').src = cardImg.src;
+        }
+
+        // Show modal
+        productModal.classList.add('active');
+        productModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeProductModal = () => {
+        if (!productModal) return;
+        productModal.classList.remove('active');
+        productModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    };
+
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeProductModal);
+    }
+    if (productModal) {
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) closeProductModal();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && productModal?.classList.contains('active')) {
+            closeProductModal();
+        }
+    });
+
+    // Helper: Form Pre-fill & Smooth Scroll to #connect
+    const prefillFormAndScroll = (productName) => {
+        const selectElement = document.getElementById('interest');
+        if (selectElement && productName) {
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value.includes(productName) || selectElement.options[i].text.includes(productName)) {
+                    selectElement.selectedIndex = i;
+                    // Flash highlight on select
+                    selectElement.classList.add('highlight-flash');
+                    setTimeout(() => selectElement.classList.remove('highlight-flash'), 1500);
+                    break;
+                }
+            }
+        }
+        // Smooth scroll to connect section
+        const connectSection = document.getElementById('connect');
+        if (connectSection) {
+            connectSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // Modal "Inquire Formulation" CTA click
+    if (modalInquireBtn) {
+        modalInquireBtn.addEventListener('click', () => {
+            closeProductModal();
+            prefillFormAndScroll(activeModalProductName);
+        });
+    }
+
+    // Attach click listeners to product cards for Quick View
+    document.querySelectorAll('.ritual-card').forEach(card => {
+        const ctaBtn = card.querySelector('.ritual-cta-btn');
+        const productName = ctaBtn ? ctaBtn.getAttribute('data-product') : '';
+
+        // Card image or title click opens Quick View Modal
+        const imgWrapper = card.querySelector('.ritual-image-wrapper');
+        const titleEl = card.querySelector('.ritual-title');
+
+        if (imgWrapper && productName) {
+            imgWrapper.style.cursor = 'pointer';
+            imgWrapper.addEventListener('click', () => openProductModal(productName));
+        }
+        if (titleEl && productName) {
+            titleEl.style.cursor = 'pointer';
+            titleEl.addEventListener('click', () => openProductModal(productName));
+        }
+
+        // CTA button directly scrolls and pre-fills form
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                prefillFormAndScroll(productName);
+            });
+        }
+    });
 });

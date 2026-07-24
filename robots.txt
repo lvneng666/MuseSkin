@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dist/
 Disallow: /node_modules/
 
-Sitemap: https://www.museskin.com/sitemap.xml
+Sitemap: https://www.peaffee.com/sitemap.xml

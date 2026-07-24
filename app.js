@@ -1,10 +1,10 @@
 /* -------------------------------------------------------------
- * MUSE SKIN - Interactive Logic & Translation Engine
+ * PEAFFEE - Interactive Logic & Translation Engine
  * ------------------------------------------------------------- */
 
 // 全局集中配置项 (方便随时修改真实联系方式与后端 API)
 const SITE_CONFIG = {
-    email: "concierge@museskin.com",
+    email: "concierge@peaffee.com",
     phone: "+1 (234) 567-890",
     whatsapp: "+1 (234) 567-890",
     whatsappLink: "https://wa.me/1234567890",
@@ -305,10 +305,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update Form Action if non-placeholder
+        // Update Form Action if non-placeholder & Attach Quick RFQ Submit Listener
         const contactForm = document.getElementById('contact-form');
-        if (contactForm && SITE_CONFIG.formspreeEndpoint && !SITE_CONFIG.formspreeEndpoint.includes('placeholder')) {
-            contactForm.action = SITE_CONFIG.formspreeEndpoint;
+        if (contactForm) {
+            if (SITE_CONFIG.formspreeEndpoint && !SITE_CONFIG.formspreeEndpoint.includes('placeholder')) {
+                contactForm.action = SITE_CONFIG.formspreeEndpoint;
+            }
+
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const formSuccess = document.getElementById('form-success');
+                
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.7';
+                }
+
+                const formData = new FormData(contactForm);
+                const endpoint = contactForm.action;
+                const isPlaceholder = !endpoint || endpoint.includes('placeholder');
+                
+                try {
+                    if (!isPlaceholder) {
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'Accept': 'application/json' }
+                        });
+                        if (response.ok) {
+                            contactForm.reset();
+                            if (formSuccess) formSuccess.style.display = 'block';
+                            showToast(currentLang === 'cn' ? '询盘发送成功！我们将在 24 小时内联系您。' : 'Inquiry sent successfully! We will follow up within 24 hours.');
+                            return;
+                        }
+                    }
+                    
+                    // Fallback state: if placeholder or endpoint offline, process & launch mailto prefilled link
+                    const name = formData.get('name') || '';
+                    const company = formData.get('company') || '';
+                    const email = formData.get('email') || '';
+                    const moq = formData.get('moq') || '';
+                    const sample = formData.get('sample_request') ? 'Yes' : 'No';
+                    const message = formData.get('message') || '';
+
+                    const subject = encodeURIComponent(`[Quick RFQ] Peaffee OEM Inquiry - ${company || name}`);
+                    const body = encodeURIComponent(
+                        `Full Name: ${name}\nCompany: ${company}\nEmail: ${email}\nTarget MOQ: ${moq}\nSample Kit Requested: ${sample}\n\nRequirements:\n${message}`
+                    );
+                    
+                    contactForm.reset();
+                    if (formSuccess) formSuccess.style.display = 'block';
+                    showToast(currentLang === 'cn' ? '询盘信息已捕获，正在准备客服邮件跟进...' : 'Inquiry captured! Launching direct concierge mail...');
+                    
+                    setTimeout(() => {
+                        window.location.href = `mailto:${SITE_CONFIG.email}?subject=${subject}&body=${body}`;
+                    }, 800);
+                } catch (err) {
+                    console.error('Form submission fallback:', err);
+                    if (formSuccess) formSuccess.style.display = 'block';
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                    }
+                }
+            });
         }
     };
 
@@ -319,9 +381,12 @@ document.addEventListener('DOMContentLoaded', () => {
         en: {
             // Nav & Header
             "nav-story": "Our Story",
+            "nav-science": "R&D Science",
             "nav-ingredients": "Ingredients",
-            "nav-rituals": "Rituals",
             "nav-customization": "Customization",
+            "nav-packaging": "Packaging",
+            "nav-rituals": "Rituals",
+            "nav-quiz": "Formula Finder",
             "nav-quality": "Quality",
             "nav-connect": "Contact Us",
             "btn-inquire": "Inquire Now",
@@ -330,6 +395,75 @@ document.addEventListener('DOMContentLoaded', () => {
             "slider-subtitle": "Bespoke Skincare Solutions",
             "slider-cta-sample": "Order Sample",
             "slider-cta-consult": "Get Free Consultation",
+
+            // Certifications Badges Bar
+            "cert-bar-title": "Global Compliance & Quality Accreditations",
+            "cert-iso9001-sub": "Quality Management System",
+            "cert-iso14001-sub": "Environmental Assurance",
+            "cert-gmpc-sub": "100k-Class Aseptic Facility",
+            "cert-ecocert-sub": "100% Bio-activeness Standard",
+            "cert-cruelty-sub": "Leaping Bunny Certified",
+            "cert-sgs-sub": "Heavy Metal & Toxin Free",
+
+            // Science Section
+            "science-subtitle": "Formulation Chemistry",
+            "science-title": "R&D Lab & Clinical Excellence",
+            "science-desc": "Our 17-year R&D laboratory integrates gas chromatography mass spectrometry (GC-MS) with bio-fermentation tech to engineer barrier-compatible active skincare.",
+            "science-1-title": "100,000-Class Aseptic Facility",
+            "science-1-text": "Controlled positive pressure filtration systems guarantee zero microbial contamination during aseptic batch filling.",
+            "science-2-title": "GC-MS Purity Profiling",
+            "science-2-text": "Every batch of botanical oil and extract is fingerprinted for molecular purity and active potency prior to compounding.",
+            "science-3-title": "Bio-compatible Lipid Mimicry",
+            "science-3-text": "Formulas feature 3:1:1 lipid ratios (ceramides:cholesterol:fatty acids) engineered to integrate directly into human skin barriers.",
+            "science-4-title": "3-Stage Accelerated Stability",
+            "science-4-text": "Thermal shock (-10°C to 45°C), UV degradation, and centrifuge tests guarantee a 24-month unopened shelf life.",
+
+            // Packaging Section
+            "pack-subtitle": "Bespoke Aesthetics",
+            "pack-title": "Luxury Packaging & Vessel Crafting",
+            "pack-desc": "Elevate your skincare brand presence with custom glass bottles, eco-friendly pumps, UV-protective jars, and premium foil stamping.",
+            "pack-1-title": "Luxury Glass Droppers",
+            "pack-1-desc": "Heavy-base frosted glass bottles with custom metallic or soft-touch silicone bulbs for exact serum dosage.",
+            "pack-2-title": "Airless Vacuum Pumps",
+            "pack-2-desc": "Prevents formula oxidation and preserves 100% active botanical potency until the very last drop.",
+            "pack-3-title": "Amber UV-Protect Jars",
+            "pack-3-desc": "Filters harmful UV wavelengths to protect light-sensitive peptide and ceramide creams.",
+            "pack-4-title": "Eco Aluminum Tubes",
+            "pack-4-desc": "Minimalist, endlessly recyclable aluminum tubes ideal for cleansers, body milks, and masks.",
+            "pack-5-title": "Sterile Monodose Ampoules",
+            "pack-5-desc": "Hermetically sealed borosilicate glass ampoules to preserve ultra-fresh high-potency active serums.",
+            "pack-6-title": "Refillable Eco Pods",
+            "pack-6-desc": "Sustainable luxury compact containers with magnetic replaceable inner pods for eco-conscious rituals.",
+
+            // Quiz Section
+            "quiz-badge": "Interactive Selection",
+            "quiz-title": "Bespoke Skincare Formulation Finder",
+            "quiz-subtitle": "Answer 3 simple questions to discover your recommended botanical active formula & estimated MOQ parameters.",
+            "quiz-lbl-1": "Skin Objective",
+            "quiz-lbl-2": "Texture / Format",
+            "quiz-lbl-3": "Target Volume",
+            "quiz-q1-title": "What is your primary skincare target or brand focus?",
+            "quiz-q1-o1": "Deep Hydration & Plumping",
+            "quiz-q1-o2": "Barrier Repair & Soothing",
+            "quiz-q1-o3": "Anti-Aging & Firming Peptide",
+            "quiz-q1-o4": "Pore Refining & Clarifying",
+            "quiz-q2-title": "Select your preferred product texture & format:",
+            "quiz-q2-o1": "Concentrated Serum / Elixir",
+            "quiz-q2-o2": "Velvet Cushion Cream",
+            "quiz-q2-o3": "Botanical Cleanser / Mist",
+            "quiz-q2-o4": "Overnight Mask / Clay Mask",
+            "quiz-q3-title": "What is your planned first order quantity (MOQ)?",
+            "quiz-q3-o1": "100 - 500 units (Standard Formula)",
+            "quiz-q3-o2": "500 - 2,000 units (Custom Packaging)",
+            "quiz-q3-o3": "2,000+ units (Bespoke OEM/ODM)",
+            "quiz-result-label": "Recommended Formula Architecture",
+            "quiz-result-actives": "Key Active Recommendation:",
+            "quiz-btn-apply": "Apply to RFQ Inquiry",
+            "quiz-btn-restart": "Retake Quiz",
+
+            // Quick View Modal
+            "modal-clinical": "Clinical Efficacy Test",
+            "modal-disclaimer": "* Internal laboratory trial parameters. Formal SGS & COA reports supplied per custom order.",
             
             // Showcase tabs
             "tab-1": "Active Serum",
@@ -346,8 +480,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "story-subtitle": "The Science of Essence",
             "story-title": "Crafting botanical beauty with clinical precision.",
             "story-quote": "\"Your skin has its own natural intelligence. We formulate to honor and amplify it.\"",
-            "story-text-1": "Founded in our state-of-the-art laboratory, MuseSkin bridges the gap between pure organic botanicals and rigorous clinical research. Over the past 17 years, our experts have focused on high-efficacy, clean active complexes designed to nurture skin barriers.",
-            "story-text-2": "Today, we are a trusted manufacturing partner for global skincare brands, offering high-fidelity OEM/ODM services, custom textures, and certified green formulations. Every drop of MuseSkin is a testament to our dedication to purity, performance, and botanical science.",
+            "story-text-1": "Founded in our state-of-the-art laboratory, Peaffee bridges the gap between pure organic botanicals and rigorous clinical research. Over the past 17 years, our experts have focused on high-efficacy, clean active complexes designed to nurture skin barriers.",
+            "story-text-2": "Today, we are a trusted manufacturing partner for global skincare brands, offering high-fidelity OEM/ODM services, custom textures, and certified green formulations. Every drop of Peaffee is a testament to our dedication to purity, performance, and botanical science.",
             
             // Ingredients
             "ingr-subtitle": "Botanical Actives",
@@ -421,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Testimonials
             "test-subtitle": "Trusted Partnerships",
             "test-title": "Endorsements from Leading Brands",
-            "test-1-quote": "\"Partnering with MuseSkin transformed our product line. Their R&D team brought active organic ingredients into a stable luxury texture that our customers absolutely adore.\"",
+            "test-1-quote": "\"Partnering with Peaffee transformed our product line. Their R&D team brought active organic ingredients into a stable luxury texture that our customers absolutely adore.\"",
             "test-2-quote": "\"The OEM process was completely seamless. From formulation modifications to custom glass supply sourcing, their attention to details cut our time-to-market by half.\"",
             "test-3-quote": "\"Their strict quality testing and compliance documents made global export completely stress-free. Highly recommended for custom formulations.\"",
 
@@ -451,14 +585,21 @@ document.addEventListener('DOMContentLoaded', () => {
             "promise-3": "Free sample pack options for certified brands and wholesalers.",
             "whatsapp-connect": "WhatsApp Consultation: +1 (234) 567-890",
             
-            // Form labels
-            "form-label-name": "Full Name",
+            // Form labels & Quick RFQ
+            "form-label-name": "Full Name *",
+            "form-label-company": "Company / Brand Name",
             "form-label-email": "Email Address *",
             "form-label-phone": "WhatsApp/Phone",
-            "form-label-country": "Country or Area Code *",
+            "form-label-country": "Country or Area *",
+            "form-label-moq": "Target Order Volume (MOQ)",
+            "moq-opt-1": "100 - 500 units (Standard Formula)",
+            "moq-opt-2": "500 - 2,000 units (Custom Packaging)",
+            "moq-opt-3": "2,000+ units (Bespoke OEM/ODM Formulation)",
+            "moq-opt-4": "Sample Testing First (< 100 units)",
+            "form-label-sample-request": "Request a Free Botanical Sample Kit (Eligible for verified brands/distributors)",
             "form-label-interest": "Subject of Interest",
             "form-label-message": "Enter your needs, such as custom ingredients, volume, or timeline *",
-            "form-btn-submit": "Send Inquiry",
+            "form-btn-submit": "Send Quick RFQ Inquiry",
             "form-success-title": "Thank You",
             "form-success-text": "Your skincare requirements have been logged securely. A formulation expert will follow up within 24 hours.",
             
@@ -481,6 +622,85 @@ document.addEventListener('DOMContentLoaded', () => {
         cn: {
             // Nav & Header
             "nav-story": "品牌故事",
+            "nav-science": "研发实验室",
+            "nav-ingredients": "核心成分",
+            "nav-customization": "定制服务",
+            "nav-packaging": "奢华包材",
+            "nav-rituals": "经典系列",
+            "nav-quiz": "智能选型",
+            "nav-quality": "卓越品质",
+            "nav-connect": "联系我们",
+            "btn-inquire": "立即咨询",
+
+            // Certifications Badges Bar
+            "cert-bar-title": "全球权威质量与合规认证资质墙",
+            "cert-iso9001-sub": "ISO9001 质量体系认证",
+            "cert-iso14001-sub": "ISO14001 环境管理体系",
+            "cert-gmpc-sub": "10万级无菌 GMP 车间",
+            "cert-ecocert-sub": "100% 绿色活性物标准",
+            "cert-cruelty-sub": "零残忍国际认证",
+            "cert-sgs-sub": "SGS 零重金属毒素检测",
+
+            // Science Section
+            "science-subtitle": "配方化学与科研实力",
+            "science-title": "17年实验室科研与临床测试",
+            "science-desc": "我们的中央研发实验室将气相色谱质谱联用仪（GC-MS）与生物发酵技术相结合，打造高亲肤性的屏障修护级护肤品。",
+            "science-1-title": "10万级 GMPC 无菌车间",
+            "science-1-text": "采用正压空气过滤与恒温恒湿控制系统，确保无菌罐装过程中全无微生物污染风险。",
+            "science-2-title": "GC-MS 质谱分子级检测",
+            "science-2-text": "每一批草本精油与发酵萃取物在投料前，均经过质谱检测，精准指纹印记纯度与活性成分含量。",
+            "science-3-title": "仿生皮脂屏障契合技术",
+            "science-3-text": "按照人体角质层 3:1:1 天然皮脂比例（神经酰胺:胆固醇:游离脂肪酸）配比，实现无缝融合与即刻修护。",
+            "science-4-title": "3阶加速稳定性测试",
+            "science-4-text": "经过 -10°C 至 45°C 冷热交替冷热冲击、UV 降解及高速离心测试，保障 24 个月未开封品质稳定。",
+
+            // Packaging Section
+            "pack-subtitle": "品牌奢华美学",
+            "pack-title": "奢华容器与瓶器定制工艺展厅",
+            "pack-desc": "精选高品质玻璃瓶、无气压泵、防紫外线避光罐及高精烫金工艺，为您的品牌建立高级视觉识别度。",
+            "pack-1-title": "奢华滴管玻璃瓶",
+            "pack-1-desc": "厚底磨砂玻璃瓶身，配以金属压泵或软触硅胶滴头，精准控制精华液定量给药。",
+            "pack-2-title": "真空无气压泵瓶",
+            "pack-2-desc": "阻绝空气接触与氧化反应，锁住最后一滴植物活性成分的极致效能。",
+            "pack-3-title": "避光琥珀玻璃罐",
+            "pack-3-desc": "阻隔有害紫外线波段，专为光敏感多肽与神经酰胺修护面霜设计。",
+            "pack-4-title": "环保软质铝管",
+            "pack-4-desc": "极简工业风、可无限回收的铝制软管，适合洁面乳、身体乳及涂抹式泥膜。",
+            "pack-5-title": "无菌单剂安瓶",
+            "pack-5-desc": "高硼硅玻璃熔封无菌安瓶，100% 锁扣微生态活性与高浓度极润原液。",
+            "pack-6-title": "环保可替换芯容器",
+            "pack-6-desc": "可持续奢华磁吸内胆容器，践行可持续环保护肤美学理念。",
+
+            // Quiz Section
+            "quiz-badge": "智能交互选型",
+            "quiz-title": "专属护肤品配方智能匹配引擎",
+            "quiz-subtitle": "仅需回答 3 个简单问题，系统将自动匹配最适合您品牌的活性成分架构与预计起订量方案。",
+            "quiz-lbl-1": "护肤目标",
+            "quiz-lbl-2": "质地形态",
+            "quiz-lbl-3": "目标起订量",
+            "quiz-q1-title": "您品牌或产品的核心诉求是什么？",
+            "quiz-q1-o1": "深层补水与充盈锁水",
+            "quiz-q1-o2": "屏障修护与退红舒缓",
+            "quiz-q1-o3": "抗衰紧致与多肽抚纹",
+            "quiz-q1-o4": "毛孔细致与油脂净化",
+            "quiz-q2-title": "您偏好的产品质地与品类形态：",
+            "quiz-q2-o1": "高浓缩精华液 / 精华油",
+            "quiz-q2-o2": "丝绒修护面霜",
+            "quiz-q2-o3": "植萃洁面乳 / 喷雾",
+            "quiz-q2-o4": "夜间睡眠面膜 / 洁净泥膜",
+            "quiz-q3-title": "您计划的首批订货量 (MOQ) 预算：",
+            "quiz-q3-o1": "100 - 500 瓶 (成熟标准配方)",
+            "quiz-q3-o2": "500 - 2,000 瓶 (专属包材定制)",
+            "quiz-q3-o3": "2,000+ 瓶 (高端 OEM/ODM 深度定制)",
+            "quiz-result-label": "系统智能推荐配方架构",
+            "quiz-result-actives": "推荐核心活性物组合：",
+            "quiz-btn-apply": "一键应用至询盘表单",
+            "quiz-btn-restart": "重新测试",
+
+            // Quick View Modal
+            "modal-clinical": "临床功效测试数据",
+            "modal-disclaimer": "* 结果基于实验室内部测试参数。定制批次可提供正式第三方 SGS & COA 检测报告。",
+            
             "prod-9-title": "植萃精华水",
             "prod-9-desc": "富含益生元的精华水，柔润肌肤并为后续护理做好准备。",
             "prod-10-title": "多肽紧致护理",
@@ -518,11 +738,11 @@ document.addEventListener('DOMContentLoaded', () => {
             "stat-cert": "与 14001 国际双重认证",
             
             // Brand Story
-            "story-subtitle": "关于妙肌",
+            "story-subtitle": "关于 Peaffee",
             "story-title": "用科学严谨之光，凝聚自然植萃原力。",
             "story-quote": "“肌肤拥有其独特的原生智慧。我们潜心配比，只为敬畏并唤醒这一本源。”",
-            "story-text-1": "创立于我们的高标准实验室，妙肌（MuseSkin）致力于在纯净天然的草本植物和严苛的临床学测试之间架起一座桥梁。在过去的 17 年里，我们的配方研发专家心无旁骛，专注于开发能够深层修护肌肤屏障的高活性、纯净护肤复合物。",
-            "story-text-2": "今天，我们已是众多全球知名护肤品牌的定制与生产合作伙伴。提供极具竞争力的 OEM/ODM 代工、定制质地开发以及权威绿色生态配方认证。每一滴妙肌产品，都是我们对纯净品质、卓越功效和植物科学热忱的见证。",
+            "story-text-1": "创立于我们的高标准实验室，Peaffee 致力于在纯净天然的草本植物和严苛的临床学测试之间架起一座桥梁。在过去的 17 年里，我们的配方研发专家心无旁骛，专注于开发能够深层修护肌肤屏障的高活性、纯净护肤复合物。",
+            "story-text-2": "今天，我们已是众多全球知名护肤品牌的定制与生产合作伙伴。提供极具竞争力的 OEM/ODM 代工、定制质质地开发以及权威绿色生态配方认证。每一滴 Peaffee 产品，都是我们对纯净品质、卓越功效和植物科学热忱的见证。",
             
             // Ingredients
             "ingr-subtitle": "活性黄金成分",
@@ -613,14 +833,21 @@ document.addEventListener('DOMContentLoaded', () => {
             "promise-3": "针对优质采购客户及品牌批发商提供免费的样品测试包选项。",
             "whatsapp-connect": "WhatsApp 业务咨询: +1 (234) 567-890",
             
-            // Form labels
-            "form-label-name": "您的全名",
+            // Form labels & Quick RFQ
+            "form-label-name": "您的全名 *",
+            "form-label-company": "公司 / 品牌名称",
             "form-label-email": "电子邮箱 *",
             "form-label-phone": "WhatsApp/联系电话",
-            "form-label-country": "国家或地区代码 *",
+            "form-label-country": "国家或地区 *",
+            "form-label-moq": "预估采购量 (MOQ)",
+            "moq-opt-1": "100 - 500 瓶 (现成标准配方)",
+            "moq-opt-2": "500 - 2,000 瓶 (定制包装包材)",
+            "moq-opt-3": "2,000+ 瓶 (专属 OEM/ODM 配方研制)",
+            "moq-opt-4": "先进行打样测试 (< 100 瓶)",
+            "form-label-sample-request": "申请免费植物护肤样品包（符合资质的品牌商/分销商可用）",
             "form-label-interest": "咨询主题",
             "form-label-message": "请输入您的需求，如定制成分、需求数量或交期等 *",
-            "form-btn-submit": "提交咨询",
+            "form-btn-submit": "发送快速询价 (Quick RFQ)",
             "form-success-title": "发送成功",
             "form-success-text": "您的护肤定制诉求已安全记录。配方开发经理将在 24 小时内与您取得联系。",
             
@@ -698,7 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "活力精华液",
                     pill: "多重分子玻尿酸 + 绿茶抗氧",
                     desc: "高浓度植萃精华，富含多重玻尿酸与绿茶抗氧化因子，强力补水，令肌肤莹润充盈。",
-                    img: "assets/hero.png",
+                    img: "assets/hero.webp",
                     target: "The Active Serum",
                     auraGlow: "radial-gradient(circle, rgba(184, 156, 126, 0.28) 0%, rgba(184, 156, 126, 0) 70%)"
                 },
@@ -706,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "奢华面霜",
                     pill: "仿生神经酰胺 + 天然植物油",
                     desc: "如丝绒般细腻润泽的护肤面霜，富含神经酰胺和天然果脂，强化皮脂屏障，牢牢锁住水分。",
-                    img: "assets/cream.png",
+                    img: "assets/cream.webp",
                     target: "The Luxury Cream",
                     auraGlow: "radial-gradient(circle, rgba(214, 185, 142, 0.32) 0%, rgba(214, 185, 142, 0) 70%)"
                 },
@@ -714,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "温和洁面乳",
                     pill: "氨基酸温和洁面 + 屏障守护",
                     desc: "极致温和且不起泡的洁面乳霜，安全洗去日常彩妆、防晒及脏污，同时细心守护皮脂层。",
-                    img: "assets/cleanser.png",
+                    img: "assets/cleanser.webp",
                     target: "The Gentle Cleanser",
                     auraGlow: "radial-gradient(circle, rgba(155, 178, 168, 0.3) 0%, rgba(155, 178, 168, 0) 70%)"
                 }
@@ -725,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Active Serum",
                     pill: "Multi-Molecular Hyaluronic Acid",
                     desc: "A highly concentrated botanical elixir infused with multi-molecular hyaluronic acid and green tea antioxidants to deeply hydrate and plump the skin.",
-                    img: "assets/hero.png",
+                    img: "assets/hero.webp",
                     target: "The Active Serum",
                     auraGlow: "radial-gradient(circle, rgba(184, 156, 126, 0.28) 0%, rgba(184, 156, 126, 0) 70%)"
                 },
@@ -733,7 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Luxury Cream",
                     pill: "Organic Ceramide Lipid Complex",
                     desc: "A decadent, whipped facial cream featuring ceramides and botanical oils that mimic the skin’s natural lipid barrier to lock in intensive moisture.",
-                    img: "assets/cream.png",
+                    img: "assets/cream.webp",
                     target: "The Luxury Cream",
                     auraGlow: "radial-gradient(circle, rgba(214, 185, 142, 0.32) 0%, rgba(214, 185, 142, 0) 70%)"
                 },
@@ -741,7 +968,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Gentle Cleanser",
                     pill: "Ultra-Gentle Amino Acid Care",
                     desc: "An ultra-gentle, non-foaming cream cleanser that lifts away makeup, SPF, and impurities while respecting the delicate moisture barrier of your skin.",
-                    img: "assets/cleanser.png",
+                    img: "assets/cleanser.webp",
                     target: "The Gentle Cleanser",
                     auraGlow: "radial-gradient(circle, rgba(155, 178, 168, 0.3) 0%, rgba(155, 178, 168, 0) 70%)"
                 }
@@ -1658,6 +1885,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-product-moq').textContent = langData.moq;
         document.getElementById('modal-product-desc').textContent = langData.desc;
         document.getElementById('modal-product-actives').textContent = langData.actives;
+        const clinicalEl = document.getElementById('modal-product-clinical');
+        if (clinicalEl) {
+            clinicalEl.textContent = langData.clinical || (currentLang === 'cn' ? '+89% 皮肤屏障锁水提升（经过 28 天 20 受试者临床测试验证）。' : '+89% Dermal Moisture Retention after 28 days of usage (20-subject clinical trial).');
+        }
         document.getElementById('modal-product-skin').textContent = langData.skin;
         document.getElementById('modal-product-usage').textContent = langData.usage;
 
@@ -1750,4 +1981,122 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    // --- 15. Interactive Formulation Finder Quiz Controller ---
+    const initFormulationQuiz = () => {
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) return;
+
+        const quizSelections = { goal: null, texture: null, volume: null };
+        const progressSteps = quizContainer.querySelectorAll('.quiz-progress-step');
+        const stepPanes = quizContainer.querySelectorAll('.quiz-step-pane');
+        const resultPane = document.getElementById('quiz-result-pane');
+        const resTitle = document.getElementById('quiz-res-title');
+        const resDesc = document.getElementById('quiz-res-desc');
+        const resActives = document.getElementById('quiz-res-actives');
+        const applyBtn = document.getElementById('quiz-apply-btn');
+        const restartBtn = document.getElementById('quiz-restart-btn');
+
+        const goToStep = (stepNumber) => {
+            progressSteps.forEach(step => {
+                const s = parseInt(step.getAttribute('data-step'));
+                if (s <= stepNumber) step.classList.add('active');
+                else step.classList.remove('active');
+            });
+
+            stepPanes.forEach(pane => pane.classList.remove('active'));
+            if (resultPane) resultPane.style.display = 'none';
+
+            if (stepNumber <= 3) {
+                const targetPane = document.getElementById(`quiz-pane-${stepNumber}`);
+                if (targetPane) targetPane.classList.add('active');
+            } else {
+                calculateResult();
+            }
+        };
+
+        const calculateResult = () => {
+            stepPanes.forEach(pane => pane.classList.remove('active'));
+            if (resultPane) resultPane.style.display = 'block';
+
+            let titleStr = '';
+            let descStr = '';
+            let activesStr = '';
+            let targetFormValue = 'Bespoke Skincare Consultation';
+
+            if (quizSelections.goal === 'hydrate') {
+                titleStr = currentLang === 'cn' ? '多重玻尿酸极润精华架构 (The Active Serum)' : 'The Active Serum Architecture';
+                descStr = currentLang === 'cn' ? '高亲肤性多重分子玻尿酸 + 绿茶发酵抗氧复合物，专为深层补水与极润充盈设计。' : 'High-affinity multi-molecular hyaluronic acid + green tea antioxidant complex designed for intense dermal plumping.';
+                activesStr = currentLang === 'cn' ? '1.5% 多重玻尿酸、二裂酵母发酵物、仿生神经酰胺' : '1.5% Multi-Molecular HA, Bifida Ferment, Organic Ceramides';
+                targetFormValue = 'The Active Serum';
+            } else if (quizSelections.goal === 'repair') {
+                titleStr = currentLang === 'cn' ? '有机神经酰胺屏障修护面霜架构 (The Luxury Cream)' : 'The Luxury Cream Architecture';
+                descStr = currentLang === 'cn' ? '3:1:1 仿生皮脂神经酰胺复合物 + 霍霍巴脂，深度重建屏障并固锁营养。' : '3:1:1 skin-identical ceramide complex + cold-pressed jojoba butter for barrier fortification.';
+                activesStr = currentLang === 'cn' ? '有机神经酰胺 NP/AP/EOP、植物角鲨烷、高山雪绒花萃取' : 'Organic Ceramide NP/AP/EOP, Squalane, Edelweiss Extract';
+                targetFormValue = 'The Luxury Cream';
+            } else if (quizSelections.goal === 'aging') {
+                titleStr = currentLang === 'cn' ? '高能多肽紧致提拉配方架构 (The Peptide Lift)' : 'The Peptide Lift Architecture';
+                descStr = currentLang === 'cn' ? '蓝铜胜肽与乙基四肽交联复合物，有效紧致下颌线与眼周纹理。' : 'Palmitoyl Tripeptide-5 and copper peptides engineered for neck contour and eye rejuvenation.';
+                activesStr = currentLang === 'cn' ? '蓝铜胜肽、棕榈酰三肽-5、深海胶原蛋白' : 'Copper Peptides, Palmitoyl Tripeptide-5, Marine Collagen';
+                targetFormValue = 'The Peptide Lift';
+            } else {
+                titleStr = currentLang === 'cn' ? '氨基酸温和净化平衡架构 (The Gentle Cleanser & Toner)' : 'The Gentle Botanical Cleanser Architecture';
+                descStr = currentLang === 'cn' ? '椰油酰氨基酸表面活性剂 + 金缕梅纯露，温和净化毛孔油脂，维持弱酸平衡。' : 'Coconut amino acid surfactants + rose hydrosol designed to refine pores without moisture loss.';
+                activesStr = currentLang === 'cn' ? '氨基酸表活、大马士革玫瑰纯露、烟酰胺 2%' : 'Amino Acid Surfactants, Rose Hydrosol, Niacinamide (2%)';
+                targetFormValue = 'The Gentle Cleanser';
+            }
+
+            if (resTitle) resTitle.textContent = titleStr;
+            if (resDesc) resDesc.textContent = descStr;
+            if (resActives) resActives.textContent = activesStr;
+
+            if (applyBtn) {
+                applyBtn.setAttribute('data-recommended-product', targetFormValue);
+                applyBtn.setAttribute('data-recommended-volume', quizSelections.volume || '');
+            }
+        };
+
+        quizContainer.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-type');
+                const val = btn.getAttribute('data-value');
+                quizSelections[type] = val;
+
+                if (type === 'goal') goToStep(2);
+                else if (type === 'texture') goToStep(3);
+                else if (type === 'volume') goToStep(4);
+            });
+        });
+
+        if (applyBtn) {
+            applyBtn.addEventListener('click', () => {
+                const recProduct = applyBtn.getAttribute('data-recommended-product');
+                const recVol = applyBtn.getAttribute('data-recommended-volume');
+                
+                const moqSelect = document.getElementById('moq');
+                if (moqSelect && recVol) {
+                    for (let i = 0; i < moqSelect.options.length; i++) {
+                        if (moqSelect.options[i].value.includes(recVol)) {
+                            moqSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                prefillFormAndScroll(recProduct);
+                showToast(currentLang === 'cn' ? '匹配配方与订量已成功带入询盘表单！' : 'Matched formulation & volume applied to inquiry form!');
+            });
+        }
+
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                quizSelections.goal = null;
+                quizSelections.texture = null;
+                quizSelections.volume = null;
+                goToStep(1);
+            });
+        }
+    };
+
+    initFormulationQuiz();
 });

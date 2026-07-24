@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#1f3a2b"/>
+  <rect x="3" y="3" width="58" height="58" rx="11" fill="none" stroke="#c5a059" stroke-width="2" opacity="0.6"/>
+  <!-- Bold Peaffee Letter P -->
+  <path d="M 16,12 H 36 C 47,12 53,18 53,27 C 53,36 47,42 36,42 H 26 V 52 H 16 Z M 26,21 V 33 H 35 C 40,33 43,30 43,27 C 43,24 40,21 35,21 Z" fill="#ffffff"/>
+  <!-- Gold Leaf Sprout inside P -->
+  <path d="M 29,15 C 38,9 45,15 42,24 C 40,29 33,31 29,26 C 27,23 26,19 29,15 Z" fill="#c5a059"/>
+</svg>

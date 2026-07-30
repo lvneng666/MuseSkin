@@ -11,6 +11,14 @@ const SITE_CONFIG = {
     formspreeEndpoint: "https://formspree.io/f/placeholder" // 替换为真实的 Formspree Endpoint 如 "https://formspree.io/f/xxxx"
 };
 
+// Let Vite resolve and hash these source assets during production builds.
+// Dynamic plain-string paths are not rewritten by Vite.
+const SHOWCASE_IMAGES = {
+    hero: new URL('./assets/hero.webp', import.meta.url).href,
+    cream: new URL('./assets/cream.webp', import.meta.url).href,
+    cleanser: new URL('./assets/cleanser.webp', import.meta.url).href
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // 12 款 Cult Classics 产品在中英文环境下的元数据明细（供 Quick View Modal 弹窗使用）
@@ -925,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "活力精华液",
                     pill: "多重分子玻尿酸 + 绿茶抗氧",
                     desc: "高浓度植萃精华，富含多重玻尿酸与绿茶抗氧化因子，强力补水，令肌肤莹润充盈。",
-                    img: "assets/hero.webp",
+                    img: SHOWCASE_IMAGES.hero,
                     target: "The Active Serum",
                     auraGlow: "radial-gradient(circle, rgba(184, 156, 126, 0.28) 0%, rgba(184, 156, 126, 0) 70%)"
                 },
@@ -933,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "奢华面霜",
                     pill: "仿生神经酰胺 + 天然植物油",
                     desc: "如丝绒般细腻润泽的护肤面霜，富含神经酰胺和天然果脂，强化皮脂屏障，牢牢锁住水分。",
-                    img: "assets/cream.webp",
+                    img: SHOWCASE_IMAGES.cream,
                     target: "The Luxury Cream",
                     auraGlow: "radial-gradient(circle, rgba(214, 185, 142, 0.32) 0%, rgba(214, 185, 142, 0) 70%)"
                 },
@@ -941,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "温和洁面乳",
                     pill: "氨基酸温和洁面 + 屏障守护",
                     desc: "极致温和且不起泡的洁面乳霜，安全洗去日常彩妆、防晒及脏污，同时细心守护皮脂层。",
-                    img: "assets/cleanser.webp",
+                    img: SHOWCASE_IMAGES.cleanser,
                     target: "The Gentle Cleanser",
                     auraGlow: "radial-gradient(circle, rgba(155, 178, 168, 0.3) 0%, rgba(155, 178, 168, 0) 70%)"
                 }
@@ -952,7 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Active Serum",
                     pill: "Multi-Molecular Hyaluronic Acid",
                     desc: "A highly concentrated botanical elixir infused with multi-molecular hyaluronic acid and green tea antioxidants to deeply hydrate and plump the skin.",
-                    img: "assets/hero.webp",
+                    img: SHOWCASE_IMAGES.hero,
                     target: "The Active Serum",
                     auraGlow: "radial-gradient(circle, rgba(184, 156, 126, 0.28) 0%, rgba(184, 156, 126, 0) 70%)"
                 },
@@ -960,7 +968,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Luxury Cream",
                     pill: "Organic Ceramide Lipid Complex",
                     desc: "A decadent, whipped facial cream featuring ceramides and botanical oils that mimic the skin’s natural lipid barrier to lock in intensive moisture.",
-                    img: "assets/cream.webp",
+                    img: SHOWCASE_IMAGES.cream,
                     target: "The Luxury Cream",
                     auraGlow: "radial-gradient(circle, rgba(214, 185, 142, 0.32) 0%, rgba(214, 185, 142, 0) 70%)"
                 },
@@ -968,7 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "The Gentle Cleanser",
                     pill: "Ultra-Gentle Amino Acid Care",
                     desc: "An ultra-gentle, non-foaming cream cleanser that lifts away makeup, SPF, and impurities while respecting the delicate moisture barrier of your skin.",
-                    img: "assets/cleanser.webp",
+                    img: SHOWCASE_IMAGES.cleanser,
                     target: "The Gentle Cleanser",
                     auraGlow: "radial-gradient(circle, rgba(155, 178, 168, 0.3) 0%, rgba(155, 178, 168, 0) 70%)"
                 }

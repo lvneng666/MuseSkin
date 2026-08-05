@@ -1,36 +1,24 @@
 {
   "name": "peaffee",
   "private": true,
-  "version": "1.0.0",
-  "description": "Peaffee botanical skincare brand site",
+  "version": "2.0.0",
   "type": "module",
+  "description": "Peaffee botanical skincare — Vue 3 SPA",
   "scripts": {
     "dev": "vite",
-    "dev:server": "node --watch server/index.js",
-    "build": "node scripts/optimize-images.js && vite build",
-    "optimize-images": "node scripts/optimize-images.js",
-    "preview": "vite preview",
-    "start": "node server/index.js",
-    "db:migrate": "node server/db/migrate.js",
-    "db:seed": "node server/db/seed.js",
-    "db:reset": "node server/db/migrate.js --fresh && node server/db/seed.js"
-  },
-  "devDependencies": {
-    "sharp": "^0.35.3",
-    "vite": "^5.0.0"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1102.0",
-    "bcryptjs": "^3.0.3",
-    "connect-pg-simple": "^10.0.0",
+    "axios": "^1.7.9",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1103.0",
+    "@vitejs/plugin-vue": "^5.2.1",
     "dotenv": "^17.4.2",
-    "express": "^4.22.2",
-    "express-rate-limit": "^8.6.2",
-    "express-session": "^1.19.0",
-    "helmet": "^8.3.0",
-    "multer": "^2.2.0",
-    "nodemailer": "^9.0.4",
-    "pg": "^8.22.0",
-    "zod": "^3.25.76"
+    "vite": "^5.4.11"
   }
 }

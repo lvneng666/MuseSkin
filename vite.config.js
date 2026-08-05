@@ -1,28 +1,17 @@
 import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+  plugins: [vue()],
   server: {
     proxy: {
-      // Forward API + uploaded receipts to the Node backend during `npm run dev`.
-      '/api': 'http://localhost:3000',
-      '/uploads': 'http://localhost:3000'
-    }
+      // Forward API calls to the Spring Boot backend during dev.
+      '/api': 'http://localhost:8080',
+    },
   },
   build: {
     sourcemap: false,
     minify: 'esbuild',
     cssMinify: true,
-    rollupOptions: {
-      input: {
-        main: 'index.html',
-        shop: 'shop.html'
-      },
-      output: {
-        assetFileNames: 'assets/[name].[ext]',
-        chunkFileNames: 'assets/[name].js',
-        entryFileNames: 'assets/[name].js'
-      }
-    }
-  }
+  },
 });
-

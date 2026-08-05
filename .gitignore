@@ -6,5 +6,8 @@ dist/
 # Local environment & secrets
 .env
 .env.local
-server/uploads/
 r2.config.json
+
+# Backend build artifacts & environment-specific settings
+backend/target/
+backend/mvn-settings.xml

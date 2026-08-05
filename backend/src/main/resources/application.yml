@@ -1,0 +1,78 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  # Load the repo-root .env for local dev (optional; Docker/compose passes env directly).
+  config:
+    import: optional:file:../.env[.properties]
+  web:
+    # Keep validation/error messages in English regardless of server locale.
+    locale: en
+    locale-resolver: fixed
+  datasource:
+    # prefer DATABASE_URL (postgres://…); DatasourceConfig converts it to jdbc:postgresql://
+    url: ${DB_JDBC_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:peaffee}}
+    username: ${DB_USER:peaffee}
+    password: ${DB_PASSWORD:peaffee}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    # Adopt an existing non-empty schema (the archived Node version created the tables).
+    baseline-on-migrate: true
+    baseline-version: 0
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  jackson:
+    # CRITICAL: Node returned raw snake_case DB rows; every DTO/entity must serialize snake_case too.
+    property-naming-strategy: SNAKE_CASE
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: UTC
+  mail:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASS:}
+    properties:
+      mail.smtp.auth: ${SMTP_USER:}
+      mail.smtp.starttls.enable: true
+
+app:
+  base-url: ${BASE_URL:http://localhost:8080}
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  admin-notify-email: ${ADMIN_NOTIFY_EMAIL:concierge@peaffee.com}
+  admin:
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
+    name: ${ADMIN_NAME:Peaffee Admin}
+  jwt:
+    secret: ${JWT_SECRET:}
+    expiration-ms: ${JWT_EXPIRATION_MS:604800000}   # 7 days
+  paypal:
+    mode: ${PAYPAL_MODE:sandbox}
+    client-id: ${PAYPAL_CLIENT_ID:}
+    client-secret: ${PAYPAL_CLIENT_SECRET:}
+    webhook-id: ${PAYPAL_WEBHOOK_ID:}
+  wu:
+    beneficiary: ${WU_BENEFICIARY:Peaffee}
+    bank: ${WU_BANK:}
+    account: ${WU_ACCOUNT:}
+    swift: ${WU_SWIFT:}
+    currency: ${WU_CURRENCY:USD}
+  shipping:
+    # Flat shipping in cents; 0 = free shipping. If free-threshold > 0, shipping is
+    # waived for orders at/above that subtotal (in cents).
+    flat-cents: ${SHIPPING_FLAT_CENTS:0}
+    free-threshold-cents: ${SHIPPING_FREE_THRESHOLD_CENTS:0}
+
+logging:
+  level:
+    org.hibernate.SQL: info

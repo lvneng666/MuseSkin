@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f5f3ef;font-family:Georgia,'Times New Roman',serif;color:#1f1f1f;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f3ef;padding:30px 10px;">
+    <tr><td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:10px;overflow:hidden;">
+        <tr><td style="background:#1f1f1f;color:#fff;padding:22px 30px;font-size:18px;letter-spacing:2px;">PEAFFEE</td></tr>
+        <tr><td style="padding:30px;">
+          <h1 style="margin:0 0 18px;font-size:22px;font-weight:normal;">New care inquiry from <span th:text="${inquiry.name}">name</span></h1>
+          <p>A new inquiry arrived on the Peaffee site:</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;border-top:1px solid #eee;">
+            <tr><td style="padding:6px 0;color:#8a8a8a;width:90px;">Name</td><td style="padding:6px 0;" th:text="${inquiry.name}">name</td></tr>
+            <tr><td style="padding:6px 0;color:#8a8a8a;">Email</td><td style="padding:6px 0;" th:text="${inquiry.email}">email</td></tr>
+            <tr th:if="${inquiry.interest != null}">
+              <td style="padding:6px 0;color:#8a8a8a;">Interest</td>
+              <td style="padding:6px 0;" th:text="${inquiry.interest}">interest</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;color:#8a8a8a;vertical-align:top;">Message</td>
+              <td style="padding:6px 0;" th:text="${inquiry.message}">message</td>
+            </tr>
+          </table>
+          <p><a th:href="${adminUrl}" style="color:#a8835c;">Open the admin inbox</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

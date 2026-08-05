@@ -16,23 +16,46 @@ services:
       timeout: 5s
       retries: 10
 
-  app:
-    build: .
+  backend:
+    build: ./backend
     restart: always
-    ports:
-      - "80:3000"
-    env_file: .env
     environment:
-      NODE_ENV: production
-      PORT: 3000
-      # compose 内部用 db 服务名连接，忽略 .env 里的本地 DATABASE_URL
+      PORT: 8080
       DATABASE_URL: postgres://${DB_USER:-peaffee}:${DB_PASSWORD:-peaffee}@db:5432/${DB_NAME:-peaffee}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@peaffee.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
+      ADMIN_NAME: ${ADMIN_NAME:-Peaffee Admin}
+      BASE_URL: ${BASE_URL:-http://localhost}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      ADMIN_NOTIFY_EMAIL: ${ADMIN_NOTIFY_EMAIL:-concierge@peaffee.com}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
+      PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}
+      PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:-}
+      WU_BENEFICIARY: ${WU_BENEFICIARY:-}
+      WU_BANK: ${WU_BANK:-}
+      WU_ACCOUNT: ${WU_ACCOUNT:-}
+      WU_SWIFT: ${WU_SWIFT:-}
+      WU_CURRENCY: ${WU_CURRENCY:-USD}
     volumes:
-      - uploads:/app/server/uploads
+      - uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "npm run db:migrate && npm run db:seed && node server/index.js"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:

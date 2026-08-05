@@ -1,0 +1,4 @@
+/* Reuse the existing brand stylesheets (marketing + shop) globally,
+   mirroring how the original multi-page site loaded both. */
+@import '../../style.css';
+@import '../../shop.css';

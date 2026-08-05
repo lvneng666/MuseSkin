@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f5f3ef;font-family:Georgia,'Times New Roman',serif;color:#1f1f1f;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f3ef;padding:30px 10px;">
+    <tr><td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:10px;overflow:hidden;">
+        <tr><td style="background:#1f1f1f;color:#fff;padding:22px 30px;font-size:18px;letter-spacing:2px;">PEAFFEE</td></tr>
+        <tr><td style="padding:30px;">
+          <h1 style="margin:0 0 18px;font-size:22px;font-weight:normal;">Your order <span th:text="${order.orderNo}">PF-…</span> is on its way</h1>
+          <p th:text="'Hi ' + ${order.customerName} + ','">Hi,</p>
+          <p>Good news — your Peaffee order <strong th:text="${order.orderNo}">PF-…</strong> has been shipped.</p>
+          <p>We'll keep you posted. In the meantime, enjoy your ritual.</p>
+          <p>— The Peaffee care team</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

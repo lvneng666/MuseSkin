@@ -3227,3 +3227,147 @@ h1, h2, h3, h4 {
     }
 }
 
+
+/* Consumer brand experience overrides */
+.legacy-b2b-field {
+    display: none !important;
+}
+
+.ritual-guide-section {
+    background-color: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+}
+
+.ritual-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.ritual-guide-card {
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border);
+    padding: 34px 30px 30px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-smooth);
+}
+
+.ritual-guide-card:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 34px rgba(28, 26, 23, 0.06);
+}
+
+.ritual-guide-number {
+    font-family: var(--font-serif);
+    color: var(--color-accent);
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 26px;
+}
+
+.ritual-guide-card h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.ritual-guide-card p {
+    color: var(--color-text-muted);
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.ritual-guide-link {
+    margin-top: auto;
+    align-self: flex-start;
+    border-bottom: 1px solid var(--color-text-main);
+    padding-bottom: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.ritual-guide-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.quiz-section {
+    background-color: var(--color-bg-primary);
+}
+
+.quiz-card-wrapper {
+    background: var(--color-bg-white) !important;
+    color: var(--color-text-main) !important;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    box-shadow: 0 18px 50px rgba(28, 26, 23, 0.07);
+}
+
+.quiz-title,
+.quiz-q-title,
+.quiz-card-wrapper .step-lbl,
+.quiz-card-wrapper .opt-text {
+    color: var(--color-text-main) !important;
+    text-shadow: none;
+}
+
+.quiz-subtitle,
+.quiz-card-wrapper .quiz-progress-step {
+    color: var(--color-text-muted) !important;
+}
+
+.quiz-badge {
+    color: var(--color-accent) !important;
+    background: rgba(184, 156, 126, 0.12);
+}
+
+.quiz-progress-line {
+    background: var(--color-border);
+}
+
+.quiz-progress-step .step-num {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-main) !important;
+}
+
+.quiz-progress-step.active .step-num {
+    background: var(--color-brand-green) !important;
+    color: var(--color-bg-primary) !important;
+}
+
+.quiz-opt-btn {
+    background: var(--color-bg-primary) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-text-main) !important;
+    border-radius: 2px;
+}
+
+.quiz-opt-btn:hover {
+    background: var(--color-brand-green) !important;
+    border-color: var(--color-brand-green) !important;
+    color: var(--color-bg-primary) !important;
+}
+
+.quiz-opt-btn:hover .opt-text {
+    color: var(--color-bg-primary) !important;
+}
+
+@media (max-width: 768px) {
+    .ritual-guide-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .ritual-guide-card {
+        min-height: 0;
+    }
+}
+/* Contact remains available for care questions; direct placeholder channels stay hidden until configured. */
+.direct-channels {
+    display: none;
+}

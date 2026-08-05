@@ -8,7 +8,10 @@ const SITE_CONFIG = {
     phone: "+1 (234) 567-890",
     whatsapp: "+1 (234) 567-890",
     whatsappLink: "https://wa.me/1234567890",
-    formspreeEndpoint: "https://formspree.io/f/placeholder" // 替换为真实的 Formspree Endpoint 如 "https://formspree.io/f/xxxx"
+    formspreeEndpoint: "https://formspree.io/f/placeholder",
+    shopUrl: "/shop.html",
+    shopReady: true, // The shop now lives on the same domain
+    cdnDomain: "https://pub-43406c238a96463d95e2178d10ae1446.r2.dev" // Cloudflare R2 公开图片域名 (支持动态拼接图片路径)
 };
 
 // Let Vite resolve and hash these source assets during production builds.
@@ -19,7 +22,7 @@ const SHOWCASE_IMAGES = {
     cleanser: new URL('./assets/cleanser.webp', import.meta.url).href
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // 12 款 Cult Classics 产品在中英文环境下的元数据明细（供 Quick View Modal 弹窗使用）
     const PRODUCT_DATA = {
@@ -28,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Hydrate & Revitalize",
                 title: "The Active Serum",
                 price: "$88.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "A highly concentrated botanical elixir infused with multi-molecular hyaluronic acid and green tea antioxidants to deeply hydrate and plump dermal layers.",
                 actives: "Multi-Molecular Hyaluronic Acid (1.5%), Organic Green Tea Ferment, Bio-Ceramides",
                 skin: "Dry, dehydrated, combination, or tired skin seeking barrier hydration.",
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "水润修护",
                 title: "活力精华液",
                 price: "$88.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "高浓度植萃水润精华，富含多重分子量的玻尿酸与绿茶抗氧因子，由内而外深层锁水充盈。",
                 actives: "多重分子量玻尿酸 (1.5%)、有机绿茶发酵物、仿生神经酰胺",
                 skin: "干性、缺水性、混合性及缺乏光泽的肌肤。",
@@ -50,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Barrier Repair",
                 title: "The Luxury Cream",
                 price: "$95.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "A velvet cushioning moisturizer engineered with skin-identical lipids to fortify the lipid barrier against environmental stressors.",
                 actives: "Organic Ceramide NP/AP/EOP, Cold-pressed Jojoba Seed Butter, Squalane",
                 skin: "Sensitized, barrier-compromised, or mature dry skin.",
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "屏障修护",
                 title: "奢华面霜",
                 price: "$95.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "如丝绒般高能滋养的修护面霜，蕴含亲肤皮脂成分，强效固锁水份并抵御外界刺激。",
                 actives: "有机神经酰胺复合物、冷压霍霍巴籽脂、植物角鲨烷",
                 skin: "敏感肌、屏障受损及干性成熟肌肤。",
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Purify & Cleanse",
                 title: "The Gentle Cleanser",
                 price: "$45.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "A low-foaming amino acid botanical milk that dissolves impurities without stripping moisture balances.",
                 actives: "Coconut Amino Acid Surfactants, Chamomile Extract, Glycerin",
                 skin: "All skin types, including highly sensitive skin.",
@@ -82,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "温和洁净",
                 title: "温和洁面乳",
                 price: "$45.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "氨基酸温和植物洁面乳，柔和净化油脂杂质，洗后水润不紧绷。",
                 actives: "椰油酰氨基酸表面活性剂、洋甘菊提取物、高纯甘油",
                 skin: "所有肤质，尤其适合极度敏感肌肤。",
@@ -94,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Refine & Hydrate",
                 title: "The Balancing Toner",
                 price: "$55.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "A botanical essence mist that refines pore texture and restores optimal pH balance after cleansing.",
                 actives: "Rose Damascena Water, Niacinamide (2%), Witch Hazel hydrosol",
                 skin: "Combination, oily, and enlarged pore textures.",
@@ -104,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "平衡调理",
                 title: "平衡爽肤水",
                 price: "$55.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "细致毛孔的植物精华喷雾，迅速恢复肌底弱酸性 pH 平衡并二次补水。",
                 actives: "大马士革玫瑰纯露、烟酰胺 (2%)、北美金缕梅提取物",
                 skin: "混合性、油性及毛孔粗大肌肤。",
@@ -116,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Eye Repair",
                 title: "The Eye Cream",
                 price: "$75.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Targeted peptide infusion designed to diminish dark circles, smooth fine expression lines, and reduce puffiness.",
                 actives: "Acetyl Tetrapeptide-5, Caffeine Complex, Marine Collagen",
                 skin: "Delicate eye contours with fine lines or fatigue.",
@@ -126,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "眼部护理",
                 title: "修护眼霜",
                 price: "$75.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "高能多肽眼部修护霜，有效改善黑眼圈、淡化细纹并舒缓眼部浮肿。",
                 actives: "乙基四肽-5、咖啡因活性复合物、深海胶原蛋白",
                 skin: "眼周有细纹、暗沉及浮肿困扰的肌肤。",
@@ -138,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "UV Protection",
                 title: "The Protecting SPF 50",
                 price: "$48.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Invisible non-greasy mineral sunscreen providing broad-spectrum UVA/UVB shield with antioxidant benefits.",
                 actives: "Non-Nano Zinc Oxide (18%), Vitamin E, Alpine Flower Complex",
                 skin: "All skin types exposed to daily sunlight.",
@@ -148,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "日常防护",
                 title: "清透防晒乳 SPF 50",
                 price: "$48.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "轻薄隐形的物理防晒乳，提供全波段 UVA/UVB 防护，清爽抗氧化。",
                 actives: "非纳米氧化锌 (18%)、维生素 E、高山雪绒花复合物",
                 skin: "所有需要日光防护的肤质。",
@@ -160,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Body Care",
                 title: "The Restructuring Body Lotion",
                 price: "$65.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Rich restructuring body milk with shea butter and lipid ceramides for long-lasting body hydration.",
                 actives: "Organic Shea Butter, Sunflower Seed Oil, Ceramide NP",
                 skin: "Dry or flaky body skin.",
@@ -170,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "身体护理",
                 title: "倍润身体乳",
                 price: "$65.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "富含乳木果油与神经酰胺的倍润身体乳，长效锁水，软化角质。",
                 actives: "有机乳木果油、葵花籽油、神经酰胺 NP",
                 skin: "全身干燥起皮及缺乏弹性的肌肤。",
@@ -182,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Detox & Purify",
                 title: "The Clarifying Clay Mask",
                 price: "$58.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Purifying Kaolin clay infused with botanical extracts to draw out impurities and regulate sebum.",
                 actives: "White Kaolin Clay, Salicylic Acid (0.5%), Tea Tree Hydrosol",
                 skin: "Congested, oily, or acne-prone skin.",
@@ -192,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "深层净化",
                 title: "矿物洁净泥膜",
                 price: "$58.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "高岭土矿物净肤泥膜，深层吸附毛孔污垢，平衡油脂分泌。",
                 actives: "高纯白高岭土、水杨酸 (0.5%)、茶树纯露",
                 skin: "毛孔堵塞、油脂分泌旺盛及易长粉刺的肌肤。",
@@ -204,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Prebiotic Essence",
                 title: "The Botanical Essence",
                 price: "$62.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Prebiotic liquid essence that primes skin barrier and enhances absorption of active treatments.",
                 actives: "Bifida Ferment Lysate, Centella Asiatica Extract",
                 skin: "Sensitive and impaired barrier conditions.",
@@ -214,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "肌底养护",
                 title: "植萃精华水",
                 price: "$62.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "益生元调理精华水，舒缓肌肤并促进后续营养成分的高效吸收。",
                 actives: "二裂酵母发酵产物溶胞物、积雪草提取物",
                 skin: "屏障脆弱及吸收力不佳的肌肤。",
@@ -226,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Firming Therapy",
                 title: "The Peptide Lift",
                 price: "$82.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Firming concentrate focused on contour definition across neck and jawline.",
                 actives: "Palmitoyl Tripeptide-5, Copper Peptides",
                 skin: "Sagging or aging neck & lower face skin.",
@@ -236,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "紧致提拉",
                 title: "多肽紧致护理",
                 price: "$82.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "专注下颌线与颈部紧致的胜肽浓缩液，改善皮肤松弛状况。",
                 actives: "棕榈酰三肽-5、蓝铜胜肽复合物",
                 skin: "出现松弛纹路及轮廓减退的成熟肌。",
@@ -248,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Luxe Oil Care",
                 title: "The Body Elixir",
                 price: "$72.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Silky botanical body serum oil providing radiant sheen without greasy residue.",
                 actives: "Rosehip Fruit Oil, Argan Kernel Oil, Vitamin E",
                 skin: "Dull, very dry skin.",
@@ -258,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "奢润体油",
                 title: "身体精华乳",
                 price: "$72.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "丝滑植物身体精华油，赋予皮肤亮泽质感，滋润不黏腻。",
                 actives: "玫瑰果油、摩洛哥坚果油、天然维生素 E",
                 skin: "暗沉、极度干枯的身体肌。",
@@ -270,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "Overnight Repair",
                 title: "The Overnight Veil",
                 price: "$68.00 USD",
-                moq: "MOQ: 100 units",
+                moq: "Daily ritual",
                 desc: "Nourishing sleep mask that locks in nutrients all night long for glowy morning skin.",
                 actives: "Squalane, Hyaluronic Acid, Lavender Oil",
                 skin: "Dehydrated, stressed overnight care.",
@@ -280,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: "夜间修护",
                 title: "夜间修护面膜",
                 price: "$68.00 USD",
-                moq: "起订量: 100 瓶",
+                moq: "日常护理",
                 desc: "睡眠锁水面膜，在整夜休息中持续注入营养，清晨焕发丰润光采。",
                 actives: "角鲨烷、玻尿酸、薰衣草植物精油",
                 skin: "疲惫、熬夜及缺水肌。",
@@ -289,8 +292,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const SHOP_PRODUCT_SLUGS = {
+        "The Active Serum": "the-active-serum",
+        "The Luxury Cream": "the-luxury-cream",
+        "The Gentle Cleanser": "the-gentle-cleanser",
+        "The Balancing Toner": "the-balancing-toner",
+        "The Eye Cream": "the-eye-cream",
+        "The Protecting SPF 50": "the-protecting-spf-50",
+        "The Restructuring Body Lotion": "the-body-lotion",
+        "The Clarifying Clay Mask": "the-clay-mask",
+        "The Botanical Essence": "the-botanical-essence",
+        "The Peptide Lift": "the-peptide-lift",
+        "The Body Elixir": "the-body-elixir",
+        "The Overnight Veil": "the-overnight-veil"
+    };
+
+    const getShopUrl = (productName = '') => {
+        if (!SITE_CONFIG.shopReady) return '#shop-coming-soon';
+        const slug = SHOP_PRODUCT_SLUGS[productName];
+        const baseUrl = SITE_CONFIG.shopUrl.replace(/\/$/, '');
+        return slug ? `${baseUrl}?product=${encodeURIComponent(slug)}` : baseUrl;
+    };
+
+    const handleShopLink = (event) => {
+        if (SITE_CONFIG.shopReady) return;
+        event.preventDefault();
+        showToast(currentLang === 'cn' ? 'Peaffee 商城即将上线，敬请期待。' : 'The Peaffee shop is coming soon.');
+    };
     // --- Dynamically Apply SITE_CONFIG to all HTML DOM Elements ---
     const initSiteConfig = () => {
+        document.querySelectorAll('[data-shop-link], .ritual-cta-btn, #slider-cta-btn').forEach(link => {
+            link.href = getShopUrl(link.getAttribute('data-product') || '');
+            if (link.dataset.shopBound !== 'true') {
+                link.addEventListener('click', handleShopLink);
+                link.dataset.shopBound = 'true';
+            }
+        });
+
         // Update Mailto Links
         document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
             el.href = `mailto:${SITE_CONFIG.email}`;
@@ -313,73 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update Form Action if non-placeholder & Attach Quick RFQ Submit Listener
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            if (SITE_CONFIG.formspreeEndpoint && !SITE_CONFIG.formspreeEndpoint.includes('placeholder')) {
-                contactForm.action = SITE_CONFIG.formspreeEndpoint;
-            }
-
-            contactForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const submitBtn = contactForm.querySelector('button[type="submit"]');
-                const formSuccess = document.getElementById('form-success');
-                
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.style.opacity = '0.7';
-                }
-
-                const formData = new FormData(contactForm);
-                const endpoint = contactForm.action;
-                const isPlaceholder = !endpoint || endpoint.includes('placeholder');
-                
-                try {
-                    if (!isPlaceholder) {
-                        const response = await fetch(endpoint, {
-                            method: 'POST',
-                            body: formData,
-                            headers: { 'Accept': 'application/json' }
-                        });
-                        if (response.ok) {
-                            contactForm.reset();
-                            if (formSuccess) formSuccess.style.display = 'block';
-                            showToast(currentLang === 'cn' ? '询盘发送成功！我们将在 24 小时内联系您。' : 'Inquiry sent successfully! We will follow up within 24 hours.');
-                            return;
-                        }
-                    }
-                    
-                    // Fallback state: if placeholder or endpoint offline, process & launch mailto prefilled link
-                    const name = formData.get('name') || '';
-                    const company = formData.get('company') || '';
-                    const email = formData.get('email') || '';
-                    const moq = formData.get('moq') || '';
-                    const sample = formData.get('sample_request') ? 'Yes' : 'No';
-                    const message = formData.get('message') || '';
-
-                    const subject = encodeURIComponent(`[Quick RFQ] Peaffee OEM Inquiry - ${company || name}`);
-                    const body = encodeURIComponent(
-                        `Full Name: ${name}\nCompany: ${company}\nEmail: ${email}\nTarget MOQ: ${moq}\nSample Kit Requested: ${sample}\n\nRequirements:\n${message}`
-                    );
-                    
-                    contactForm.reset();
-                    if (formSuccess) formSuccess.style.display = 'block';
-                    showToast(currentLang === 'cn' ? '询盘信息已捕获，正在准备客服邮件跟进...' : 'Inquiry captured! Launching direct concierge mail...');
-                    
-                    setTimeout(() => {
-                        window.location.href = `mailto:${SITE_CONFIG.email}?subject=${subject}&body=${body}`;
-                    }, 800);
-                } catch (err) {
-                    console.error('Form submission fallback:', err);
-                    if (formSuccess) formSuccess.style.display = 'block';
-                } finally {
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.style.opacity = '1';
-                    }
-                }
-            });
-        }
+        // The contact form is submitted to the store API — see section 6.
     };
 
     // --- Translation Dictionary ---
@@ -398,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "nav-quality": "Quality",
             "nav-connect": "Contact Us",
             "btn-inquire": "Inquire Now",
-            
+
             // Slider / Hero
             "slider-subtitle": "Bespoke Skincare Solutions",
             "slider-cta-sample": "Order Sample",
@@ -472,25 +444,25 @@ document.addEventListener('DOMContentLoaded', () => {
             // Quick View Modal
             "modal-clinical": "Clinical Efficacy Test",
             "modal-disclaimer": "* Internal laboratory trial parameters. Formal SGS & COA reports supplied per custom order.",
-            
+
             // Showcase tabs
             "tab-1": "Active Serum",
             "tab-2": "Luxury Cream",
             "tab-3": "Gentle Cleanser",
-            
+
             // Stats Bar
             "stat-years": "Years Formulation R&D",
             "stat-formulas": "Proven Actives Formulas",
             "stat-countries": "Countries Exported",
             "stat-cert": "9001 & 14001 Certified",
-            
+
             // Brand Story
             "story-subtitle": "The Science of Essence",
             "story-title": "Crafting botanical beauty with clinical precision.",
             "story-quote": "\"Your skin has its own natural intelligence. We formulate to honor and amplify it.\"",
             "story-text-1": "Founded in our state-of-the-art laboratory, Peaffee bridges the gap between pure organic botanicals and rigorous clinical research. Over the past 17 years, our experts have focused on high-efficacy, clean active complexes designed to nurture skin barriers.",
             "story-text-2": "Today, we are a trusted manufacturing partner for global skincare brands, offering high-fidelity OEM/ODM services, custom textures, and certified green formulations. Every drop of Peaffee is a testament to our dedication to purity, performance, and botanical science.",
-            
+
             // Ingredients
             "ingr-subtitle": "Botanical Actives",
             "ingr-title": "Dermatology Meets Nature",
@@ -519,13 +491,13 @@ document.addEventListener('DOMContentLoaded', () => {
             "step-5-text": "Every production batch undergoes 7 distinct stability and microbiological checks before release.",
             "step-6-title": "Global Express Logistics",
             "step-6-text": "Receive your premium inventory securely packaged and shipped directly with full custom clearance logs.",
-            
+
             // Quality Section
             "quality-title-1": "Delivery & Eco Shipment",
             "quality-desc-1": "For standard formulations, we dispatch samples and batches within 5-10 business days. For customized OEM/ODM inventory, strict scheduling ensures shipping immediately upon final quality sign-off. We package only in protective, premium endlessly recyclable paper composites and luxury glass containers.",
             "quality-title-2": "Pure Ingredient Assurance",
             "quality-desc-2": "We operate clean, automated cosmetics manufacturing facilities with ISO9001 and ISO14001 certification. Every raw botanical extract is supplied by premium fair-trade farms and passes 7 distinct testing stages, guaranteeing toxin-free, cruelty-free, and dermatologically approved skincare products.",
-            
+
             // Rituals / Classics
             "rituals-subtitle": "Rituals & Formulas",
             "rituals-title": "The Cult Classics",
@@ -583,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "cta-banner-title": "Ready to Create Your Signature Skincare Line?",
             "cta-banner-desc": "Collaborate with our chemical scientists to design botanically advanced skincare formulations customized for your brand demographics.",
             "cta-banner-btn": "Get Started Now",
-            
+
             // Connect section
             "connect-subtitle": "Skincare Consultation",
             "connect-title": "Begin Your Customized Skincare Journey",
@@ -592,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "promise-2": "Complete product parameter guides and certs delivered instantly.",
             "promise-3": "Free sample pack options for certified brands and wholesalers.",
             "whatsapp-connect": "WhatsApp Consultation: +1 (234) 567-890",
-            
+
             // Form labels & Quick RFQ
             "form-label-name": "Full Name *",
             "form-label-company": "Company / Brand Name",
@@ -610,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "form-btn-submit": "Send Quick RFQ Inquiry",
             "form-success-title": "Thank You",
             "form-success-text": "Your skincare requirements have been logged securely. A formulation expert will follow up within 24 hours.",
-            
+
             // Dropdown options
             "interest-opt-1": "Bespoke Skincare Consultation",
             "interest-opt-2": "OEM/ODM Inquiry: The Active Serum",
@@ -622,7 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "interest-opt-9": "OEM/ODM Inquiry: The Restructuring Body Lotion",
             "interest-opt-10": "OEM/ODM Inquiry: The Clarifying Clay Mask",
             "interest-opt-5": "Wholesale & Bulk Ingredients",
-            
+
             // Footer
             "whatsapp-float-tooltip": "Chat on WhatsApp",
             "footer-tagline": "Formulated with 17 years of botanical science to honor your skin's intelligence."
@@ -708,7 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Quick View Modal
             "modal-clinical": "临床功效测试数据",
             "modal-disclaimer": "* 结果基于实验室内部测试参数。定制批次可提供正式第三方 SGS & COA 检测报告。",
-            
+
             "prod-9-title": "植萃精华水",
             "prod-9-desc": "富含益生元的精华水，柔润肌肤并为后续护理做好准备。",
             "prod-10-title": "多肽紧致护理",
@@ -728,30 +700,30 @@ document.addEventListener('DOMContentLoaded', () => {
             "nav-quality": "卓越品质",
             "nav-connect": "联系我们",
             "btn-inquire": "立即咨询",
-            
+
             // Slider / Hero
             "slider-subtitle": "专属护肤品定制方案",
             "slider-cta-sample": "申领样品",
             "slider-cta-consult": "获取免费咨询",
-            
+
             // Showcase tabs
             "tab-1": "活力精华液",
             "tab-2": "奢华面霜",
             "tab-3": "温和洁面乳",
-            
+
             // Stats Bar
             "stat-years": "载护肤品研发生产经验",
             "stat-formulas": "项临床验证活性配方储备",
             "stat-countries": "个全球国家与地区出口",
             "stat-cert": "与 14001 国际双重认证",
-            
+
             // Brand Story
             "story-subtitle": "关于 Peaffee",
             "story-title": "用科学严谨之光，凝聚自然植萃原力。",
             "story-quote": "“肌肤拥有其独特的原生智慧。我们潜心配比，只为敬畏并唤醒这一本源。”",
             "story-text-1": "创立于我们的高标准实验室，Peaffee 致力于在纯净天然的草本植物和严苛的临床学测试之间架起一座桥梁。在过去的 17 年里，我们的配方研发专家心无旁骛，专注于开发能够深层修护肌肤屏障的高活性、纯净护肤复合物。",
             "story-text-2": "今天，我们已是众多全球知名护肤品牌的定制与生产合作伙伴。提供极具竞争力的 OEM/ODM 代工、定制质质地开发以及权威绿色生态配方认证。每一滴 Peaffee 产品，都是我们对纯净品质、卓越功效和植物科学热忱的见证。",
-            
+
             // Ingredients
             "ingr-subtitle": "活性黄金成分",
             "ingr-title": "皮肤学科技与自然的交融",
@@ -780,13 +752,13 @@ document.addEventListener('DOMContentLoaded', () => {
             "step-5-text": "每一批次出厂成品均须通过实验室理化指标、生物稳定测试等 7 道质检大关。",
             "step-6-title": "全球快速物流交付",
             "step-6-text": "高标准安全包箱装运，支持海空干线多式联运直接送达并协助处理通关文件。",
-            
+
             // Quality Section
             "quality-title-1": "交期与环保包材保障",
             "quality-desc-1": "常规标准料体配方最快可于 5-10 个工作日内安排发货；个性化定制 OEM 订单严格按照合同排产并极速出货。我们始终选用环保可回收纸质外盒与厚壁避光奢华玻璃器皿，为您提供高档次且环境友好的双重包裹保护。",
             "quality-title-2": "纯净原料与工艺保障",
             "quality-desc-2": "我们运营配有十万级净化标准的无尘化妆品生产基地，通过 ISO9001 质量与 ISO14001 环境管理体系双重认证。所有天然植萃活性物皆直接源于高标准绿色农场，且投产前必须经由 7 大严苛指标复检，确保产品温和高效、零残忍（Cruelty-free）。",
-            
+
             // Rituals / Classics
             "rituals-subtitle": "产品与配方仪式",
             "rituals-title": "明星经典单品",
@@ -831,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "cta-banner-title": "准备好打造属于您的专属护肤品线了吗？",
             "cta-banner-desc": "与我们的皮肤学配方科学家面对面，为您的目标客群定制研发高活性、符合国际市场趋势的高端植物护肤品。",
             "cta-banner-btn": "立即开启定制咨询",
-            
+
             // Connect section
             "connect-subtitle": "护肤方案咨询",
             "connect-title": "开启您的专属护肤定制之旅",
@@ -840,7 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "promise-2": "即刻提供相关成分的详细规格参数报告及行业质检资质认证书。",
             "promise-3": "针对优质采购客户及品牌批发商提供免费的样品测试包选项。",
             "whatsapp-connect": "WhatsApp 业务咨询: +1 (234) 567-890",
-            
+
             // Form labels & Quick RFQ
             "form-label-name": "您的全名 *",
             "form-label-company": "公司 / 品牌名称",
@@ -858,7 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "form-btn-submit": "发送快速询价 (Quick RFQ)",
             "form-success-title": "发送成功",
             "form-success-text": "您的护肤定制诉求已安全记录。配方开发经理将在 24 小时内与您取得联系。",
-            
+
             // Dropdown options
             "interest-opt-1": "专属定制护肤咨询",
             "interest-opt-2": "OEM/ODM 咨询: 活力精华液",
@@ -870,21 +842,313 @@ document.addEventListener('DOMContentLoaded', () => {
             "interest-opt-9": "OEM/ODM 咨询: 倍润身体乳",
             "interest-opt-10": "OEM/ODM 咨询: 矿物洁净泥膜",
             "interest-opt-5": "大宗原料采购与批发",
-            
+
             // Footer
             "whatsapp-float-tooltip": "在线咨询",
             "footer-tagline": "融合 17 年植物护肤科技，探寻自然美肌本源之力。"
         }
     };
 
+    // Public C-end copy overrides. Legacy OEM data remains only for compatibility with hidden sections.
+    Object.assign(translations.en, {
+        "story-subtitle": "The Peaffee point of view",
+        "story-title": "Botanical care with a quieter kind of confidence.",
+        "story-quote": "Your skin has its own rhythm. Peaffee helps you listen to it.",
+        "story-text-1": "Peaffee brings plant wisdom and modern formulation thinking together in comfortable formulas for everyday skin.",
+        "story-text-2": "Every product is made to feel considered but uncomplicated: a small, dependable ritual you can return to morning and night.",
+        "form-label-name": "Your name *",
+        "form-label-email": "Email address *",
+        "form-label-interest": "What can we help with?",
+        "interest-opt-1": "Choosing a daily routine",
+        "interest-opt-2": "The Active Serum",
+        "interest-opt-3": "The Luxury Cream",
+        "interest-opt-4": "The Gentle Cleanser",
+        "interest-opt-6": "The Balancing Toner",
+        "interest-opt-7": "The Eye Cream",
+        "interest-opt-8": "The Protecting SPF 50",
+        "interest-opt-9": "The Body Lotion",
+        "interest-opt-10": "The Clarifying Clay Mask",
+        "nav-science": "Why Peaffee",
+        "nav-rituals": "Rituals",
+        "nav-quiz": "Find Your Ritual",
+        "nav-connect": "Contact",
+        "btn-inquire": "Shop the Collection",
+        "slider-subtitle": "Botanical skincare for daily rituals",
+        "slider-cta-sample": "Shop this ritual",
+        "slider-cta-consult": "Find Your Ritual",
+        "cert-bar-title": "Thoughtful Care Standards",
+        "science-subtitle": "Why Peaffee",
+        "science-title": "Active care, made for real routines.",
+        "science-desc": "Peaffee brings botanical actives, barrier-minded textures, and considered daily rituals together in one calm skincare wardrobe.",
+        "science-1-title": "Barrier-minded formulas",
+        "science-1-text": "Comfortable textures designed to support the skin’s natural moisture barrier without making your routine feel complicated.",
+        "science-2-title": "Botanical actives",
+        "science-2-text": "Plant-derived extracts and modern skin-supporting ingredients chosen for a gentle, purposeful daily ritual.",
+        "science-3-title": "A considered texture",
+        "science-3-text": "From weightless serums to cushioned creams, every formula is shaped around how it feels to use.",
+        "science-4-title": "Made for consistency",
+        "science-4-text": "Simple routines are easier to keep. Peaffee products are designed to layer naturally from morning to evening.",
+        "ritual-guide-subtitle": "Simple Skin Rituals",
+        "ritual-guide-title": "A thoughtful rhythm for everyday skin.",
+        "ritual-guide-desc": "Start with the essentials, layer with intention, and let your skin set the pace.",
+        "ritual-guide-1-title": "Morning Reset",
+        "ritual-guide-1-text": "Cleanse gently, replenish moisture, and finish with daily protection.",
+        "ritual-guide-2-title": "Evening Restore",
+        "ritual-guide-2-text": "Layer active hydration and barrier care for a calm, cushioned finish.",
+        "ritual-guide-3-title": "Weekly Renew",
+        "ritual-guide-3-text": "Make space for a focused treatment when your skin needs a little more.",
+        "ritual-guide-cta": "Explore the ritual",
+        "rituals-subtitle": "Peaffee Collection",
+        "rituals-title": "The rituals you return to.",
+        "filter-all": "All Products",
+        "filter-body": "Body Care",
+        "ritual-cta": "Shop Now",
+        "faq-subtitle": "Good to Know",
+        "faq-title": "Questions before your ritual begins",
+        "faq-1-q": "How do I choose the right Peaffee product?",
+        "faq-1-a": "Start with your skin’s main need: hydration, barrier comfort, gentle cleansing, or daily protection. Our Find Your Ritual guide can help you build a simple starting routine.",
+        "faq-2-q": "Are Peaffee products suitable for sensitive skin?",
+        "faq-2-a": "Our formulas are designed around comfortable, barrier-minded care. If your skin is highly reactive, patch test first and introduce one new product at a time.",
+        "faq-3-q": "How should I layer the products?",
+        "faq-3-a": "Use lighter textures first: cleanse, mist or toner, serum, cream, then SPF in the morning. In the evening, finish with the texture your skin needs most.",
+        "faq-4-q": "Where can I buy Peaffee products?",
+        "faq-4-a": "The Peaffee collection is available on this site. Use the Shop the Collection links to explore products and place an order request.",
+        "quiz-badge": "Personalized Ritual Guide",
+        "quiz-title": "Find Your Skin Ritual",
+        "quiz-subtitle": "Answer three simple questions and discover a Peaffee routine to explore.",
+        "quiz-lbl-1": "Skin Goal",
+        "quiz-lbl-2": "Texture",
+        "quiz-lbl-3": "Routine Preference",
+        "quiz-q1-title": "What would you like your skin to feel more like?",
+        "quiz-q1-o1": "Deeply hydrated",
+        "quiz-q1-o2": "Calm and comfortable",
+        "quiz-q1-o3": "Firm and refreshed",
+        "quiz-q1-o4": "Clean and balanced",
+        "quiz-q2-title": "Which texture speaks to your ritual?",
+        "quiz-q2-o1": "A concentrated serum",
+        "quiz-q2-o2": "A velvet cream",
+        "quiz-q2-o3": "A gentle cleanser or mist",
+        "quiz-q2-o4": "A renewing mask",
+        "quiz-q3-title": "How simple would you like your daily ritual to feel?",
+        "quiz-q3-o1": "A simple 2-step routine",
+        "quiz-q3-o2": "A balanced morning and evening ritual",
+        "quiz-q3-o3": "A complete ritual with weekly care",
+        "quiz-result-label": "Your ritual match",
+        "quiz-result-actives": "Explore with",
+        "quiz-btn-apply": "Shop this ritual",
+        "quiz-btn-restart": "Start again",
+        "cta-banner-title": "Make space for a better daily ritual.",
+        "cta-banner-desc": "Explore botanical formulas designed to make everyday skin care feel calm, considered, and easy to return to.",
+        "cta-banner-btn": "Shop the Collection",
+        "connect-subtitle": "Peaffee Care",
+        "connect-title": "Need help choosing your ritual?",
+        "connect-text": "Tell us what your skin needs and our care team will help you find a comfortable place to begin.",
+        "promise-1": "Simple guidance for your skin goals.",
+        "promise-2": "Ingredient and usage notes made easy to understand.",
+        "promise-3": "A thoughtful answer from the Peaffee care team.",
+        "form-label-company": "Product or topic",
+        "form-label-phone": "Preferred contact",
+        "form-label-country": "Skin type",
+        "form-label-moq": "Product interest",
+        "form-label-sample-request": "Send me occasional ritual notes and product news.",
+        "form-label-message": "Tell us what your skin needs *",
+        "form-btn-submit": "Send a care question",
+        "form-success-title": "Thank you",
+        "form-success-text": "Your message has been received. The Peaffee care team will be in touch soon.",
+        "modal-btn-inquire": "Shop this ritual",
+        "modal-disclaimer": "Ingredient and product details may vary by format. Please check the final product page before purchase.",
+        "modal-clinical": "Why it feels good",
+        "footer-tagline": "Botanical skincare for a slower, more thoughtful daily ritual.",
+        "shop-coming-soon": "The Peaffee shop is now open on this site.",
+        "footer-shop": "Shop the Collection"
+    });
+
+    Object.assign(translations.cn, {
+        "story-subtitle": "Peaffee 的护理理念",
+        "story-title": "植物护理，也可以从容而坚定。",
+        "story-quote": "肌肤有自己的节奏。Peaffee 帮助你听见它。",
+        "story-text-1": "Peaffee 将植物智慧与现代配方思维融合，带来适合日常肌肤的舒适配方。",
+        "story-text-2": "每一款产品都追求有意识但不复杂的使用感，成为你早晚都愿意回到的可靠护理仪式。",
+        "form-label-name": "你的姓名 *",
+        "form-label-email": "电子邮箱 *",
+        "form-label-interest": "你需要哪方面的帮助？",
+        "interest-opt-1": "选择日常护理方案",
+        "interest-opt-2": "活力精华液",
+        "interest-opt-3": "奢华面霜",
+        "interest-opt-4": "温和洁面乳",
+        "interest-opt-6": "平衡爽肤水",
+        "interest-opt-7": "修护眼霜",
+        "interest-opt-8": "清透防晒乳",
+        "interest-opt-9": "身体乳",
+        "interest-opt-10": "洁净泥膜",
+        "nav-science": "为什么选择 Peaffee",
+        "nav-rituals": "护肤仪式",
+        "nav-quiz": "找到你的护肤仪式",
+        "nav-connect": "联系 Peaffee",
+        "btn-inquire": "进入产品系列",
+        "slider-subtitle": "为日常仪式而生的植物护肤",
+        "slider-cta-sample": "查看这套仪式",
+        "slider-cta-consult": "找到你的护肤仪式",
+        "cert-bar-title": "我们重视的护理标准",
+        "science-subtitle": "为什么选择 Peaffee",
+        "science-title": "有效护理，融入真实生活。",
+        "science-desc": "Peaffee 将植物活性成分、肌肤屏障友好的质地和从容的日常护理融合在一起。",
+        "science-1-title": "屏障友好配方",
+        "science-1-text": "舒适的质地帮助维持肌肤天然保湿屏障，让日常护理更简单。",
+        "science-2-title": "植物活性成分",
+        "science-2-text": "精选植物萃取与现代护肤成分，为肌肤带来温和而有目的的日常护理。",
+        "science-3-title": "值得反复使用的肤感",
+        "science-3-text": "从轻盈精华到柔润面霜，每一款配方都围绕真实使用感进行设计。",
+        "science-4-title": "适合长期坚持",
+        "science-4-text": "简单的护理更容易坚持。Peaffee 产品可以自然衔接早晚护肤。",
+        "ritual-guide-subtitle": "简单护肤仪式",
+        "ritual-guide-title": "给每天肌肤一个舒服的节奏。",
+        "ritual-guide-desc": "从基础护理开始，有意识地叠加，让肌肤决定自己的步调。",
+        "ritual-guide-1-title": "晨间焕醒",
+        "ritual-guide-1-text": "温和清洁、补充水分，并以日间防护结束护理。",
+        "ritual-guide-2-title": "夜间修护",
+        "ritual-guide-2-text": "叠加主动补水与屏障护理，让肌肤拥有柔软舒适的收尾。",
+        "ritual-guide-3-title": "每周焕新",
+        "ritual-guide-3-text": "当肌肤需要更多呵护时，为一款集中护理留出时间。",
+        "ritual-guide-cta": "探索这套仪式",
+        "rituals-subtitle": "Peaffee 产品系列",
+        "rituals-title": "值得反复使用的日常护理。",
+        "filter-all": "全部产品",
+        "filter-body": "身体护理",
+        "ritual-cta": "立即查看",
+        "faq-subtitle": "使用前了解",
+        "faq-title": "开始护肤仪式前的几个问题",
+        "faq-1-q": "如何选择适合我的 Peaffee 产品？",
+        "faq-1-a": "可以先从肌肤最主要的需求开始：补水、屏障舒缓、温和清洁或日间防护。你也可以使用护肤仪式测试，找到适合自己的起点。",
+        "faq-2-q": "Peaffee 产品适合敏感肌吗？",
+        "faq-2-a": "我们的配方围绕舒适、屏障友好的护理理念设计。如果肌肤特别敏感，建议先局部测试，并一次只加入一款新产品。",
+        "faq-3-q": "产品应该如何叠加使用？",
+        "faq-3-a": "通常按照质地由轻到重使用：洁面、喷雾或爽肤水、精华、面霜，早间最后使用防晒。晚间可以根据肌肤状态调整最后一步。",
+        "faq-4-q": "在哪里可以买到 Peaffee 产品？",
+        "faq-4-a": "Peaffee 产品系列现已在本站开放，可以通过本站的产品入口直接进入购买。",
+        "quiz-badge": "个性化护肤仪式",
+        "quiz-title": "找到你的护肤仪式",
+        "quiz-subtitle": "回答三个简单问题，探索适合你的 Peaffee 日常护理。",
+        "quiz-lbl-1": "肌肤目标",
+        "quiz-lbl-2": "喜欢的质地",
+        "quiz-lbl-3": "护理习惯",
+        "quiz-q1-title": "你希望肌肤呈现怎样的状态？",
+        "quiz-q1-o1": "深度补水",
+        "quiz-q1-o2": "平静舒适",
+        "quiz-q1-o3": "紧致焕活",
+        "quiz-q1-o4": "洁净平衡",
+        "quiz-q2-title": "哪种质地更符合你的护理仪式？",
+        "quiz-q2-o1": "高浓度精华",
+        "quiz-q2-o2": "柔润面霜",
+        "quiz-q2-o3": "温和洁面或喷雾",
+        "quiz-q2-o4": "焕新面膜",
+        "quiz-q3-title": "你希望日常护理有多简单？",
+        "quiz-q3-o1": "简单两步护理",
+        "quiz-q3-o2": "早晚平衡护理",
+        "quiz-q3-o3": "包含每周护理的完整仪式",
+        "quiz-result-label": "你的护肤仪式推荐",
+        "quiz-result-actives": "推荐探索",
+        "quiz-btn-apply": "查看这套仪式",
+        "quiz-btn-restart": "重新开始",
+        "cta-banner-title": "给自己留一点更好的日常护理时间。",
+        "cta-banner-desc": "探索让肌肤护理更从容、更有意识，也更容易坚持的植物配方。",
+        "cta-banner-btn": "进入产品系列",
+        "connect-subtitle": "Peaffee 肌肤护理",
+        "connect-title": "需要帮助选择护肤仪式吗？",
+        "connect-text": "告诉我们你的肌肤需求，Peaffee 护理团队会帮助你找到舒适的起点。",
+        "promise-1": "围绕你的肌肤目标提供简单建议。",
+        "promise-2": "用容易理解的方式说明成分和用法。",
+        "promise-3": "来自 Peaffee 护理团队的认真回复。",
+        "form-label-company": "产品或主题",
+        "form-label-phone": "偏好的联系方式",
+        "form-label-country": "肌肤类型",
+        "form-label-moq": "感兴趣的产品",
+        "form-label-sample-request": "接收偶尔发送的护肤灵感和产品信息。",
+        "form-label-message": "告诉我们你的肌肤需求 *",
+        "form-btn-submit": "发送护理问题",
+        "form-success-title": "谢谢你",
+        "form-success-text": "我们已经收到你的留言，Peaffee 护理团队会尽快联系你。",
+        "modal-btn-inquire": "查看这套仪式",
+        "modal-disclaimer": "成分和产品信息可能因规格有所不同，购买前请以最终产品页为准。",
+        "modal-clinical": "舒适肤感",
+        "footer-tagline": "植物护肤，让每天的护理更从容、更有意识。",
+        "shop-coming-soon": "Peaffee 产品系列现已在本站开放。",
+        "footer-shop": "进入产品系列"
+    });
     let currentLang = 'en';
+
+    // --- Store API helpers (products are database-driven) ---
+    const escHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const shopUrlForSlug = (slug) => `${SITE_CONFIG.shopUrl.replace(/\/$/, '')}?product=${encodeURIComponent(slug)}`;
+    const moneyCents = (cents) => `$${(cents / 100).toFixed(2)} USD`;
+
+    async function fetchJson(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Request failed (${res.status})`);
+        return res.json();
+    }
+
+    let ritualProducts = [];
+    async function loadRitualProducts() {
+        try {
+            const data = await fetchJson('/api/products');
+            ritualProducts = data.products || [];
+        } catch (err) {
+            console.warn('Could not load products from the store API:', err);
+            ritualProducts = [];
+        }
+        return ritualProducts;
+    }
+
+    function renderRitualCards() {
+        const track = document.getElementById('rituals-track');
+        if (!track || !ritualProducts.length) return;
+        const cn = currentLang === 'cn';
+        track.innerHTML = ritualProducts.map((p) => `
+            <div class="ritual-card-slide" data-category="${escHtml(p.ritual_categories || '')}" data-product-key="${escHtml(p.title_en)}">
+                <div class="ritual-card">
+                    <div class="ritual-image-wrapper">
+                        <img src="${escHtml(p.image_url)}" alt="${escHtml(p.title_en)}" class="ritual-image" width="300" height="300" loading="lazy" decoding="async">
+                        <span class="ritual-active-tag">${escHtml(p.ritual_tag_en || p.tag_en)}</span>
+                    </div>
+                    <div class="ritual-info">
+                        <h3 class="ritual-title">${escHtml(cn ? p.title_cn : p.title_en)}</h3>
+                        <span class="ritual-price">${moneyCents(p.price_cents)}</span>
+                        <p class="ritual-description">${escHtml(cn ? (p.ritual_desc_cn || p.desc_cn) : (p.ritual_desc_en || p.desc_en))}</p>
+                        <a href="${shopUrlForSlug(p.slug)}" class="ritual-cta-btn" data-shop-link data-product="${escHtml(p.title_en)}">${cn ? '立即查看' : 'Shop Now'}</a>
+                    </div>
+                </div>
+            </div>`).join('');
+    }
+
+    function updateRitualCardTexts() {
+        if (!ritualProducts.length) return;
+        const track = document.getElementById('rituals-track');
+        if (!track) return;
+        const cn = currentLang === 'cn';
+        track.querySelectorAll('.ritual-card-slide').forEach((slide) => {
+            const key = slide.getAttribute('data-product-key');
+            const p = ritualProducts.find((x) => x.title_en === key);
+            if (!p) return;
+            const titleEl = slide.querySelector('.ritual-title');
+            const priceEl = slide.querySelector('.ritual-price');
+            const descEl = slide.querySelector('.ritual-description');
+            const tagEl = slide.querySelector('.ritual-active-tag');
+            const ctaEl = slide.querySelector('.ritual-cta-btn');
+            if (titleEl) titleEl.textContent = cn ? p.title_cn : p.title_en;
+            if (priceEl) priceEl.textContent = moneyCents(p.price_cents);
+            if (descEl) descEl.textContent = cn ? (p.ritual_desc_cn || p.desc_cn) : (p.ritual_desc_en || p.desc_en);
+            if (tagEl) tagEl.textContent = cn ? (p.ritual_tag_cn || p.ritual_tag_en || p.tag_en) : (p.ritual_tag_en || p.tag_en);
+            if (ctaEl) ctaEl.textContent = cn ? '立即查看' : 'Shop Now';
+        });
+    }
 
     // Set Language Switcher Active Class & Text
     const switchLanguage = (lang) => {
         currentLang = lang;
         document.documentElement.setAttribute('lang', lang === 'cn' ? 'zh-CN' : 'en');
         document.getElementById('lang-current').textContent = lang.toUpperCase();
-        
+
         // Toggle Active Class in Dropdown List
         document.querySelectorAll('.lang-opt').forEach(opt => {
             if (opt.getAttribute('data-lang') === lang) {
@@ -921,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Re-sync Showcase slider descriptions (handles dynamic elements without data-i18n)
         updateShowcaseData(lang);
+        updateRitualCardTexts();
         initSiteConfig();
     };
 
@@ -1008,7 +1273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (auraEl && currentData.auraGlow) auraEl.style.background = currentData.auraGlow;
             if (imageEl) {
                 imageEl.src = currentData.img;
-                imageEl.alt = `MuseSkin ${currentData.title}`;
+                imageEl.alt = `Peaffee ${currentData.title}`;
             }
             if (ctaBtn) ctaBtn.setAttribute('data-product', currentData.target);
 
@@ -1114,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (auraEl && data.auraGlow) auraEl.style.background = data.auraGlow;
                 if (imageEl) {
                     imageEl.src = data.img;
-                    imageEl.alt = `MuseSkin ${data.title}`;
+                    imageEl.alt = `Peaffee ${data.title}`;
                 }
                 if (ctaBtn) ctaBtn.setAttribute('data-product', data.target);
             }
@@ -1327,7 +1592,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. Editorial Scroll Reveal Animation ---
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    
+
     // Hide elements dynamically if IntersectionObserver is supported
     if ('IntersectionObserver' in window) {
         revealElements.forEach(el => {
@@ -1359,12 +1624,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. Product Inquiry Dynamic Selection & Scroll ---
     const productCtas = document.querySelectorAll('.ritual-cta-btn, #slider-cta-btn');
     const interestSelect = document.getElementById('interest');
-    const connectSection = document.getElementById('connect');
+    const connectSection = document.getElementById('contact') || document.getElementById('connect');
 
     productCtas.forEach(cta => {
         cta.addEventListener('click', (e) => {
+            if (cta.matches('[data-shop-link]')) return;
             e.preventDefault();
-            const product = cta.getAttribute('data-product') || 'Bespoke Skincare Consultation';
+            const product = cta.getAttribute('data-product') || 'Peaffee product question';
             if (interestSelect) {
                 interestSelect.value = product;
             }
@@ -1444,7 +1710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         contactForm.addEventListener('submit', async (e) => {
-            const isPlaceholder = contactForm.getAttribute('action').includes('placeholder');
+            e.preventDefault();
 
             // Validate all required fields before submission
             let allValid = true;
@@ -1455,7 +1721,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!allValid) {
-                e.preventDefault();
                 // Scroll to first invalid field
                 const firstInvalid = contactForm.querySelector('.is-invalid');
                 if (firstInvalid) {
@@ -1464,52 +1729,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (isPlaceholder) {
-                e.preventDefault();
+            const submitBtn = contactForm.querySelector('.btn-submit');
+            const submitText = submitBtn.querySelector('span');
+            const originalText = submitText.textContent;
+            submitText.textContent = (currentLang === 'cn') ? '正在提交咨询...' : 'Sending Inquiry...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.pointerEvents = 'none';
 
-                const submitBtn = contactForm.querySelector('.btn-submit');
-                const submitText = submitBtn.querySelector('span');
-                const originalText = submitText.textContent;
+            try {
+                const data = new FormData(contactForm);
+                const res = await fetch('/api/inquiries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.get('name'),
+                        email: data.get('email'),
+                        interest: data.get('interest'),
+                        message: data.get('message'),
+                    }),
+                });
+                const result = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(result.error || 'Submission failed');
 
-                submitText.textContent = (currentLang === 'cn') ? '正在提交咨询...' : 'Sending Inquiry...';
-                submitBtn.style.opacity = '0.7';
-                submitBtn.style.pointerEvents = 'none';
+                contactForm.style.display = 'none';
+                formSuccess.style.display = 'block';
+                formSuccess.style.opacity = '0';
+
+                // Add post-submit guidance
+                if (!formSuccess.querySelector('.success-guidance')) {
+                    const guidance = document.createElement('div');
+                    guidance.className = 'success-guidance';
+                    guidance.innerHTML = `
+                        <p class="success-guidance-title">${currentLang === 'cn' ? '更快速的联系方式' : 'Even faster ways to reach us'}</p>
+                        <a href="${SITE_CONFIG.whatsappLink}" target="_blank" rel="noopener noreferrer" class="success-guidance-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                            ${currentLang === 'cn' ? 'WhatsApp 直接咨询' : 'Chat on WhatsApp'}
+                        </a>
+                    `;
+                    formSuccess.appendChild(guidance);
+                }
 
                 setTimeout(() => {
-                    contactForm.style.display = 'none';
-                    formSuccess.style.display = 'block';
-                    formSuccess.style.opacity = '0';
-
-                    // Add post-submit guidance
-                    if (!formSuccess.querySelector('.success-guidance')) {
-                        const guidance = document.createElement('div');
-                        guidance.className = 'success-guidance';
-                        guidance.innerHTML = `
-                            <p class="success-guidance-title">${currentLang === 'cn' ? '更快速的联系方式' : 'Even faster ways to reach us'}</p>
-                            <a href="${SITE_CONFIG.whatsappLink}" target="_blank" rel="noopener noreferrer" class="success-guidance-btn">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                                </svg>
-                                ${currentLang === 'cn' ? 'WhatsApp 直接咨询' : 'Chat on WhatsApp'}
-                            </a>
-                        `;
-                        formSuccess.appendChild(guidance);
-                    }
-
-                    setTimeout(() => {
-                        formSuccess.style.transition = 'opacity 0.6s ease';
-                        formSuccess.style.opacity = '1';
-                    }, 50);
-
-                    submitText.textContent = originalText;
-                    submitBtn.style.opacity = '';
-                    submitBtn.style.pointerEvents = '';
-                    contactForm.reset();
-                    // Clear validation states
-                    formInputs.forEach(input => {
-                        input.classList.remove('is-valid', 'is-invalid');
-                    });
-                }, 1200);
+                    formSuccess.style.transition = 'opacity 0.6s ease';
+                    formSuccess.style.opacity = '1';
+                }, 50);
+                showToast(currentLang === 'cn' ? '留言发送成功！我们会尽快联系你。' : 'Message sent successfully! We will be in touch soon.');
+                contactForm.reset();
+                formInputs.forEach(input => {
+                    input.classList.remove('is-valid', 'is-invalid');
+                });
+            } catch (err) {
+                console.error('Inquiry submission error:', err);
+                submitText.textContent = originalText;
+                submitBtn.style.opacity = '';
+                submitBtn.style.pointerEvents = '';
+                showToast(currentLang === 'cn' ? '发送失败，请稍后重试。' : 'Submission failed, please try again.');
             }
         });
     }
@@ -1522,7 +1798,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (trigger && wrapper) {
             trigger.addEventListener('click', () => {
                 const isActive = item.classList.contains('active');
-                
+
                 // Close all other open items first to make it a clean single-open accordion
                 faqItems.forEach(otherItem => {
                     if (otherItem !== item && otherItem.classList.contains('active')) {
@@ -1590,7 +1866,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addSwipeListener = (element, onSwipeLeft, onSwipeRight) => {
         let touchStartX = 0;
         let touchEndX = 0;
-        
+
         element.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
@@ -1628,7 +1904,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!testTrack) return;
         currentTestIndex = index;
         testTrack.style.transform = `translateX(-${index * 100}%)`;
-        
+
         testDots.forEach((dot, i) => {
             if (i === index) {
                 dot.classList.add('active');
@@ -1690,6 +1966,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 11. Continuous Product Marquee & Filter Controller ---
+    // Load the catalog and render the ritual cards BEFORE the marquee clones them.
+    await loadRitualProducts();
+    renderRitualCards();
+    updateRitualCardTexts();
+
     const ritualsTrack = document.getElementById('rituals-track');
     const ritualsCarousel = document.querySelector('.rituals-carousel');
     const ritualPrevBtn = document.getElementById('ritual-prev-btn');
@@ -1880,32 +2161,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openProductModal = (productKey) => {
         if (!productModal) return;
-        const data = PRODUCT_DATA[productKey];
-        if (!data) return;
+        const product = ritualProducts.find((p) => p.title_en === productKey);
+        if (!product) return;
 
-        const langData = data[currentLang] || data['en'];
+        const cn = currentLang === 'cn';
         activeModalProductName = productKey;
 
-        // Populate modal fields
-        document.getElementById('modal-product-category').textContent = langData.category;
-        document.getElementById('modal-product-title').textContent = langData.title;
-        document.getElementById('modal-product-price').textContent = langData.price;
-        document.getElementById('modal-product-moq').textContent = langData.moq;
-        document.getElementById('modal-product-desc').textContent = langData.desc;
-        document.getElementById('modal-product-actives').textContent = langData.actives;
+        // Populate modal fields from the database product
+        document.getElementById('modal-product-category').textContent = cn ? product.category_cn : product.category_en;
+        document.getElementById('modal-product-title').textContent = cn ? product.title_cn : product.title_en;
+        document.getElementById('modal-product-price').textContent = moneyCents(product.price_cents);
+        document.getElementById('modal-product-moq').textContent = cn ? (product.moq_cn || '') : (product.moq_en || '');
+        document.getElementById('modal-product-desc').textContent = cn ? product.desc_cn : product.desc_en;
+        document.getElementById('modal-product-actives').textContent = cn ? product.active_cn : product.active_en;
         const clinicalEl = document.getElementById('modal-product-clinical');
         if (clinicalEl) {
-            clinicalEl.textContent = langData.clinical || (currentLang === 'cn' ? '+89% 皮肤屏障锁水提升（经过 28 天 20 受试者临床测试验证）。' : '+89% Dermal Moisture Retention after 28 days of usage (20-subject clinical trial).');
+            clinicalEl.textContent = cn ? '围绕舒适肤感与日常坚持而设计。' : 'Designed around comfortable textures and everyday consistency.';
         }
-        document.getElementById('modal-product-skin').textContent = langData.skin;
-        document.getElementById('modal-product-usage').textContent = langData.usage;
-
-        // Match image based on title
-        const cardImg = document.querySelector(`.ritual-card-slide [data-product="${productKey}"]`)
-                     ?.closest('.ritual-card')?.querySelector('.ritual-image');
-        if (cardImg) {
-            document.getElementById('modal-product-img').src = cardImg.src;
-        }
+        document.getElementById('modal-product-skin').textContent = cn ? product.skin_cn : product.skin_en;
+        document.getElementById('modal-product-usage').textContent = cn ? product.usage_cn : product.usage_en;
+        document.getElementById('modal-product-img').src = product.image_url;
 
         // Show modal
         productModal.classList.add('active');
@@ -1949,7 +2224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         // Smooth scroll to connect section
-        const connectSection = document.getElementById('connect');
+        const connectSection = document.getElementById('contact') || document.getElementById('connect');
         if (connectSection) {
             connectSection.scrollIntoView({ behavior: 'smooth' });
         }
@@ -1959,7 +2234,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalInquireBtn) {
         modalInquireBtn.addEventListener('click', () => {
             closeProductModal();
-            prefillFormAndScroll(activeModalProductName);
+            const product = ritualProducts.find((p) => p.title_en === activeModalProductName);
+            window.location.href = product ? shopUrlForSlug(product.slug) : getShopUrl(activeModalProductName);
         });
     }
 
@@ -1984,6 +2260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // CTA button directly scrolls and pre-fills form
         if (ctaBtn) {
             ctaBtn.addEventListener('click', (e) => {
+                if (ctaBtn.matches('[data-shop-link]')) return;
                 e.preventDefault();
                 prefillFormAndScroll(productName);
             });
@@ -2030,7 +2307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let titleStr = '';
             let descStr = '';
             let activesStr = '';
-            let targetFormValue = 'Bespoke Skincare Consultation';
+            let targetFormValue = 'The Active Serum';
 
             if (quizSelections.goal === 'hydrate') {
                 titleStr = currentLang === 'cn' ? '多重玻尿酸极润精华架构 (The Active Serum)' : 'The Active Serum Architecture';
@@ -2079,20 +2356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (applyBtn) {
             applyBtn.addEventListener('click', () => {
                 const recProduct = applyBtn.getAttribute('data-recommended-product');
-                const recVol = applyBtn.getAttribute('data-recommended-volume');
-                
-                const moqSelect = document.getElementById('moq');
-                if (moqSelect && recVol) {
-                    for (let i = 0; i < moqSelect.options.length; i++) {
-                        if (moqSelect.options[i].value.includes(recVol)) {
-                            moqSelect.selectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-
-                prefillFormAndScroll(recProduct);
-                showToast(currentLang === 'cn' ? '匹配配方与订量已成功带入询盘表单！' : 'Matched formulation & volume applied to inquiry form!');
+                window.location.href = getShopUrl(recProduct);
             });
         }
 

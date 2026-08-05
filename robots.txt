@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dist/
 Disallow: /node_modules/
 
-Sitemap: https://www.peaffee.com/sitemap.xml
+Sitemap: https://sindir.cn/sitemap.xml

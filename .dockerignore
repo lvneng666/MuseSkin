@@ -1,0 +1,8 @@
+node_modules
+dist
+server/uploads
+.env
+.env.local
+r2.config.json
+.git
+*.log

@@ -1,11 +1,39 @@
 version: '3.8'
 
 services:
-  museskin:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: museskin-app
-    ports:
-      - "80:80"
+  db:
+    image: postgres:16-alpine
     restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-peaffee}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-peaffee}
+      POSTGRES_DB: ${DB_NAME:-peaffee}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-peaffee} -d ${DB_NAME:-peaffee}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - "80:3000"
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # compose 内部用 db 服务名连接，忽略 .env 里的本地 DATABASE_URL
+      DATABASE_URL: postgres://${DB_USER:-peaffee}:${DB_PASSWORD:-peaffee}@db:5432/${DB_NAME:-peaffee}
+    volumes:
+      - uploads:/app/server/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npm run db:migrate && npm run db:seed && node server/index.js"
+
+volumes:
+  pgdata:
+  uploads:

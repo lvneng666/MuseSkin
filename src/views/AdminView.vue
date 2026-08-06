@@ -130,10 +130,15 @@
             </div>
             <div class="admin-img-preview" role="button" :title="productForm.image_url ? '点击修改图片' : '点击上传图片'"
                  @click="uploadImgInput.click()">
-              <img :src="productForm.image_url || 'https://pub-43406c238a96463d95e2178d10ae1446.r2.dev/assets/hero.webp'"
-                   :alt="productForm.title_en">
-              <div class="admin-img-overlay">
-                <span>{{ uploading ? '上传中…' : (productForm.image_url ? '点击修改图片' : '点击上传图片') }}</span>
+              <template v-if="productForm.image_url">
+                <img :src="productForm.image_url" :alt="productForm.title_en">
+                <div class="admin-img-overlay">
+                  <span>{{ uploading ? '上传中…' : '点击修改图片' }}</span>
+                </div>
+              </template>
+              <div v-else class="admin-img-placeholder">
+                <span class="admin-img-plus">+</span>
+                <span>{{ uploading ? '上传中…' : '请上传图片' }}</span>
               </div>
               <input ref="uploadImgInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-hidden" @change="uploadImage">
             </div>
@@ -459,6 +464,15 @@ onMounted(loadAll);
 }
 .admin-img-preview:hover .admin-img-overlay { opacity: 1; }
 .admin-img-overlay span { text-align: center; padding: 0 8px; }
+.admin-img-placeholder {
+  width: 120px; height: 120px; border-radius: 10px;
+  border: 1.5px dashed #c9c2ba; background: #faf8f5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; color: #a8835c; font-size: 12px; font-weight: 600; letter-spacing: .02em;
+  transition: background .15s;
+}
+.admin-img-preview:hover .admin-img-placeholder { background: #f2ede6; }
+.admin-img-placeholder .admin-img-plus { font-size: 26px; line-height: 1; color: #c9b8a0; }
 .admin-error { margin: 0 0 12px; padding: 9px 13px; border: 1px solid #d9b3b3; background: #fdf1f1; color: #b23a3a; font-size: 13px; border-radius: 8px; }
 .admin-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid #e6e2dc; }
 .admin-img-preview { margin-bottom: 14px; }

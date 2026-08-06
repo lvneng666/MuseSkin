@@ -7,6 +7,7 @@ public record AppProperties(
         String baseUrl,
         String uploadDir,
         String adminNotifyEmail,
+        String mailFrom,
         Admin admin,
         Shipping shipping
 ) {

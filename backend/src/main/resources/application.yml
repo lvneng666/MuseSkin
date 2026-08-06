@@ -42,13 +42,17 @@ spring:
     username: ${SMTP_USER:}
     password: ${SMTP_PASS:}
     properties:
-      mail.smtp.auth: ${SMTP_USER:}
+      # NOTE: must be a boolean. ${SMTP_USER:} would evaluate to e.g. "resend",
+      # which disables SMTP auth and makes the provider reject us.
+      mail.smtp.auth: ${SMTP_AUTH:true}
       mail.smtp.starttls.enable: true
 
 app:
   base-url: ${BASE_URL:http://localhost:8080}
   upload-dir: ${UPLOAD_DIR:./uploads}
   admin-notify-email: ${ADMIN_NOTIFY_EMAIL:concierge@peaffee.com}
+  # Sender address on customer-facing emails (separate from the inquiry-notify inbox).
+  mail-from: ${MAIL_FROM:${ADMIN_NOTIFY_EMAIL:concierge@peaffee.com}}
   admin:
     email: ${ADMIN_EMAIL:}
     password: ${ADMIN_PASSWORD:}

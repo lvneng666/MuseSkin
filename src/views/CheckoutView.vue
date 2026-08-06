@@ -101,7 +101,7 @@ const cart = useCartStore();
 const products = ref([]);
 const bySlug = computed(() => new Map(products.value.map((p) => [p.slug, p])));
 function productBySlug(slug) { return bySlug.value.get(slug); }
-const titleOf = (p) => (p ? (i18n.lang === 'cn' ? p.title_cn : p.title_en) : '');
+const titleOf = (p) => (p ? (i18n.lang === 'cn' ? (p.title_cn || p.title_en) : (p.title_en || p.title_cn)) : '');
 const money = (cents) => `$${(cents / 100).toFixed(2)} USD`;
 const subtotal = computed(() =>
   cart.entries.reduce((sum, e) => sum + (productBySlug(e.slug)?.price_cents || 0) * e.quantity, 0)

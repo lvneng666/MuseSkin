@@ -41,7 +41,7 @@
                 <button type="button" @click="openProduct(p)" :aria-label="titleOf(p)">
                   <img :src="p.image_url" :alt="titleOf(p)" loading="lazy" decoding="async" width="520" height="580">
                 </button>
-                <span class="product-tag">{{ p.tag_en }}</span>
+                <span class="product-tag">{{ tagOf(p) }}</span>
               </div>
               <div class="product-card-info">
                 <span class="product-card-category">{{ categoryOf(p) }}</span>
@@ -134,13 +134,17 @@ const visibleProducts = computed(() =>
 const bySlug = computed(() => new Map(products.value.map((p) => [p.slug, p])));
 function productBySlug(slug) { return bySlug.value.get(slug); }
 
-const titleOf = (p) => (p ? (i18n.lang === 'cn' ? p.title_cn : p.title_en) : '');
-const categoryOf = (p) => (p ? (i18n.lang === 'cn' ? p.category_cn : p.category_en) : '');
-const descOf = (p) => (p ? (i18n.lang === 'cn' ? p.desc_cn : p.desc_en) : '');
-const gridDesc = (p) => (i18n.lang === 'cn' ? (p.grid_desc_cn || p.desc_cn) : (p.grid_desc_en || p.desc_en));
-const activeOf = (p) => (p ? (i18n.lang === 'cn' ? p.active_cn : p.active_en) : '');
-const skinOf = (p) => (p ? (i18n.lang === 'cn' ? p.skin_cn : p.skin_en) : '');
-const usageOf = (p) => (p ? (i18n.lang === 'cn' ? p.usage_cn : p.usage_en) : '');
+// Bilingual product text: prefer the active language, fall back to the other so a
+// missing translation never renders blank.
+const bi = (en, cn) => (i18n.lang === 'cn' ? (cn || en) : (en || cn));
+const titleOf = (p) => (p ? bi(p.title_en, p.title_cn) : '');
+const categoryOf = (p) => (p ? bi(p.category_en, p.category_cn) : '');
+const tagOf = (p) => (p ? bi(p.tag_en, p.tag_cn) : '');
+const descOf = (p) => (p ? bi(p.desc_en, p.desc_cn) : '');
+const gridDesc = (p) => (i18n.lang === 'cn' ? (p.grid_desc_cn || p.desc_cn || p.grid_desc_en || p.desc_en) : (p.grid_desc_en || p.desc_en || p.grid_desc_cn || p.desc_cn));
+const activeOf = (p) => (p ? bi(p.active_en, p.active_cn) : '');
+const skinOf = (p) => (p ? bi(p.skin_en, p.skin_cn) : '');
+const usageOf = (p) => (p ? bi(p.usage_en, p.usage_cn) : '');
 const money = (cents) => `$${(cents / 100).toFixed(2)} USD`;
 
 function openProduct(p) { activeProduct.value = p; }

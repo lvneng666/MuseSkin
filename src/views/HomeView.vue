@@ -75,7 +75,7 @@
           <div v-for="p in ritualProducts" :key="p.slug" class="ritual-card">
             <div class="ritual-image-wrapper">
               <img :src="p.image_url" :alt="titleOf(p)" class="ritual-image" width="300" height="300" loading="lazy" decoding="async">
-              <span class="ritual-active-tag">{{ p.ritual_tag_en || p.tag_en }}</span>
+              <span class="ritual-active-tag">{{ ritualTagOf(p) }}</span>
             </div>
             <div class="ritual-info">
               <h3 class="ritual-title">{{ titleOf(p) }}</h3>
@@ -166,8 +166,12 @@ const slides = computed(() => {
 function next() { index.value = (index.value + 1) % 3; }
 function prev() { index.value = (index.value + 2) % 3; }
 
-const titleOf = (p) => (i18n.lang === 'cn' ? p.title_cn : p.title_en);
-const ritualDesc = (p) => (i18n.lang === 'cn' ? (p.ritual_desc_cn || p.desc_cn) : (p.ritual_desc_en || p.desc_en));
+// Bilingual product text: prefer the active language, fall back to the other so a
+// missing translation never renders blank.
+const bi = (en, cn) => (i18n.lang === 'cn' ? (cn || en) : (en || cn));
+const titleOf = (p) => bi(p.title_en, p.title_cn);
+const ritualTagOf = (p) => (i18n.lang === 'cn' ? (p.ritual_tag_cn || p.tag_cn || p.ritual_tag_en || p.tag_en) : (p.ritual_tag_en || p.tag_en || p.ritual_tag_cn || p.tag_cn));
+const ritualDesc = (p) => (i18n.lang === 'cn' ? (p.ritual_desc_cn || p.desc_cn || p.ritual_desc_en || p.desc_en) : (p.ritual_desc_en || p.desc_en || p.ritual_desc_cn || p.desc_cn));
 const money = (cents) => `$${(cents / 100).toFixed(2)} USD`;
 
 // Homepage shows products marked "Featured" in the admin (ordered by sort order).

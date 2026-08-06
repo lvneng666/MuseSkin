@@ -104,7 +104,16 @@
 .lang-name { flex: 1; font-size: 12px; }
 
 .bag-button { display: inline-flex; gap: 8px; align-items: center; border-left: 1px solid var(--shop-line); padding-left: 14px; }
+.bag-text { display: inline; }
 .bag-count { min-width: 21px; height: 21px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--shop-green); color: #fff; font-size: 10px; letter-spacing: 0; }
+
+/* Very small screens: drop redundant Shop pill + bag label, shrink logo to fit */
+@media (max-width: 400px) {
+    .mobile-header-shop-btn { display: none; }
+    .bag-text { display: none; }
+    .shop-brand img { width: 100px; }
+    .shop-header-actions { gap: 6px; }
+}
 
 
 .shop-hero { overflow: hidden; background: var(--shop-sand); }

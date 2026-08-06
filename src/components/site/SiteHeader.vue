@@ -40,30 +40,54 @@
         </div>
 
         <router-link to="/cart" class="bag-button" aria-label="Open shopping bag">
-          <span>{{ i18n.t('Bag', '购物袋') }}</span>
+          <span class="bag-text">{{ i18n.t('Bag', '购物袋') }}</span>
           <span class="bag-count">{{ cart.count }}</span>
         </router-link>
-        <button class="mobile-nav-toggle" type="button" :class="{ active: menuOpen }"
-                aria-label="Toggle navigation menu" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen">
+        <button ref="toggleBtnRef" class="mobile-nav-toggle" type="button" :class="{ active: menuOpen }"
+                :aria-label="i18n.t('Toggle navigation menu', '切换导航菜单')" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen">
           <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </button>
       </div>
     </div>
 
     <!-- Mobile full-screen navigation drawer -->
-    <div v-if="menuOpen" class="mobile-drawer active" @click="menuOpen = false">
-      <nav class="mobile-nav" aria-label="Mobile navigation">
-        <router-link to="/" class="mobile-link" @click="menuOpen = false">{{ i18n.t('Home', '首页') }}</router-link>
-        <router-link to="/shop" class="mobile-link" @click="menuOpen = false">{{ i18n.t('Shop', '产品系列') }}</router-link>
-        <router-link to="/account" class="mobile-link" @click="menuOpen = false">{{ i18n.t('Account', '账户') }}</router-link>
-        <router-link v-if="auth.user?.role === 'admin'" to="/admin" class="mobile-link" @click="menuOpen = false">Admin</router-link>
-      </nav>
-    </div>
+    <transition name="drawer">
+      <div v-if="menuOpen" ref="drawerRef" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu" tabindex="-1" @click="closeMenu">
+        <nav class="mobile-nav" aria-label="Mobile navigation">
+          <router-link to="/" class="mobile-link" @click="closeMenu">{{ i18n.t('Home', '首页') }}</router-link>
+          <router-link to="/shop" class="mobile-link" @click="closeMenu">{{ i18n.t('Shop', '产品系列') }}</router-link>
+          <router-link to="/account" class="mobile-link" @click="closeMenu">{{ i18n.t('Account', '账户') }}</router-link>
+          <router-link v-if="auth.user?.role === 'admin'" to="/admin" class="mobile-link" @click="closeMenu">Admin</router-link>
+
+          <div class="mobile-cat-block">
+            <p class="mobile-cat-title">{{ i18n.t('Shop by category', '按类目选购') }}</p>
+            <div class="mobile-cat-links">
+              <router-link
+                v-for="c in categories"
+                :key="c.key"
+                :to="{ path: '/shop', query: c.key === 'all' ? {} : { category: c.key } }"
+                class="mobile-cat-link"
+                @click="closeMenu"
+              >{{ c.label }}</router-link>
+            </div>
+          </div>
+
+          <div class="mobile-auth">
+            <template v-if="auth.user">
+              <span class="mobile-auth-email">{{ auth.user.email }}</span>
+              <button type="button" class="mobile-auth-btn" @click="logout">{{ i18n.t('Sign out', '退出登录') }}</button>
+            </template>
+            <router-link v-else to="/account" class="mobile-auth-btn" @click="closeMenu">{{ i18n.t('Sign in', '登录') }}</router-link>
+          </div>
+        </nav>
+      </div>
+    </transition>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/auth';
 import { useCartStore } from '../../stores/cart';
 import { useI18n, LANGUAGES } from '../../stores/i18n';
@@ -71,15 +95,48 @@ import { useI18n, LANGUAGES } from '../../stores/i18n';
 const i18n = useI18n();
 const cart = useCartStore();
 const auth = useAuthStore();
-const menuOpen = ref(false);
+const router = useRouter();
 
+const menuOpen = ref(false);
 const langMenuOpen = ref(false);
 const langDropdownRef = ref(null);
+const toggleBtnRef = ref(null);
+const drawerRef = ref(null);
+
+const categories = computed(() => [
+  { key: 'all', label: i18n.t('All products', '全部产品') },
+  { key: 'face', label: i18n.t('Face care', '面部护理') },
+  { key: 'body', label: i18n.t('Body care', '身体护理') },
+  { key: 'protection', label: i18n.t('Daily protection', '日间防护') },
+]);
 
 function selectLang(code) {
   i18n.setLang(code);
   langMenuOpen.value = false;
 }
+
+function closeMenu() {
+  menuOpen.value = false;
+}
+
+function onKeydown(e) {
+  if (e.key === 'Escape' && menuOpen.value) closeMenu();
+}
+
+async function logout() {
+  await auth.logout();
+  closeMenu();
+}
+
+// Lock body scroll while the drawer is open, and move focus into it.
+watch(menuOpen, (open) => {
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (open) {
+    nextTick(() => drawerRef.value?.focus());
+  } else {
+    toggleBtnRef.value?.focus();
+  }
+});
 
 function handleClickOutside(event) {
   if (langDropdownRef.value && !langDropdownRef.value.contains(event.target)) {
@@ -87,12 +144,21 @@ function handleClickOutside(event) {
   }
 }
 
+// Close the drawer if navigation happens outside a drawer link (e.g. logo tap).
+const removeAfterEach = router.afterEach(() => {
+  if (menuOpen.value) menuOpen.value = false;
+});
+
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
+  document.addEventListener('keydown', onKeydown);
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('keydown', onKeydown);
+  removeAfterEach();
+  document.body.style.overflow = '';
 });
 </script>
 

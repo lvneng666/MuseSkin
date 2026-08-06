@@ -95,7 +95,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import SiteHeader from '../components/site/SiteHeader.vue';
 import SiteFooter from '../components/site/SiteFooter.vue';
 import { useCartStore } from '../stores/cart';
@@ -109,6 +110,14 @@ const ui = useUiStore();
 
 const products = ref([]);
 const filter = ref('all');
+const route = useRoute();
+watch(
+  () => route.query.category,
+  (v) => {
+    filter.value = ['all', 'face', 'body', 'protection'].includes(v) ? v : 'all';
+  },
+  { immediate: true }
+);
 const activeProduct = ref(null);
 
 const filters = computed(() => [

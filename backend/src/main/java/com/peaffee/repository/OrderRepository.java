@@ -49,4 +49,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select count(o) from Order o where o.paymentStatus = com.peaffee.entity.Order.PaymentStatus.awaiting_confirmation")
     long countPendingWu();
+
+    /** Per-day order count + paid revenue since :from (Beijing time). Native: to_char/day grouping. */
+    @Query(value = """
+        select to_char(placed_at at time zone 'Asia/Shanghai', 'YYYY-MM-DD') as date,
+               count(*) as orders,
+               coalesce(sum(case when payment_status = 'paid' then total_cents else 0 end), 0) as revenue
+        from orders
+        where placed_at >= :from
+        group by date
+        order by date
+        """, nativeQuery = true)
+    List<Object[]> dailyStats(@Param("from") Instant from);
+
+    /** Order-status → count distribution. */
+    @Query(value = "select order_status as status, count(*) as cnt from orders group by order_status order by cnt desc", nativeQuery = true)
+    List<Object[]> statusDistribution();
+
+    List<Order> findTop8ByOrderByPlacedAtDesc();
 }

@@ -28,6 +28,96 @@
           <div class="admin-stat"><div class="admin-stat-value">{{ stats.new_inquiries }}</div><div class="admin-stat-label">新询盘</div></div>
           <div class="admin-stat"><div class="admin-stat-value">{{ stats.low_stock_items }}</div><div class="admin-stat-label">低库存</div></div>
         </div>
+
+        <!-- 近 7 天销售趋势（零依赖 SVG 折线图） -->
+        <div class="admin-panel">
+          <h3 class="admin-panel-title">近 7 天销售趋势</h3>
+          <div v-if="dailyOrders.length" class="admin-chart-row">
+            <div class="admin-chart">
+              <div class="admin-chart-label">订单量</div>
+              <svg viewBox="0 0 560 170" class="admin-svg" role="img" aria-label="近7天订单量折线图">
+                <polyline :points="linePoints(dailyOrders)" fill="none" stroke="#2f7d4f" stroke-width="2.5"/>
+                <g v-for="(v, i) in dailyOrders" :key="'o'+i">
+                  <circle :cx="xOf(i)" :cy="yOf(v, dailyOrders)" r="3" fill="#2f7d4f"/>
+                  <text :x="xOf(i)" :y="yOf(v, dailyOrders) - 9" text-anchor="middle" class="admin-svg-val">{{ v }}</text>
+                  <text :x="xOf(i)" :y="163" text-anchor="middle" class="admin-svg-date">{{ dayLabel(i) }}</text>
+                </g>
+              </svg>
+            </div>
+            <div class="admin-chart">
+              <div class="admin-chart-label">销售额</div>
+              <svg viewBox="0 0 560 170" class="admin-svg" role="img" aria-label="近7天销售额折线图">
+                <polyline :points="linePoints(dailyRevenue)" fill="none" stroke="#a8835c" stroke-width="2.5"/>
+                <g v-for="(v, i) in dailyRevenue" :key="'r'+i">
+                  <circle :cx="xOf(i)" :cy="yOf(v, dailyRevenue)" r="3" fill="#a8835c"/>
+                  <text :x="xOf(i)" :y="yOf(v, dailyRevenue) - 9" text-anchor="middle" class="admin-svg-val">{{ moneyShort(v) }}</text>
+                  <text :x="xOf(i)" :y="163" text-anchor="middle" class="admin-svg-date">{{ dayLabel(i) }}</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div v-else class="admin-muted" style="padding:10px 0">近 7 天暂无订单</div>
+        </div>
+
+        <!-- 状态分布 + 热销榜 -->
+        <div class="admin-dash-grid">
+          <div class="admin-panel">
+            <h3 class="admin-panel-title">订单状态分布</h3>
+            <div v-if="distributionTotal" class="admin-dist">
+              <div v-for="s in stats.status_distribution" :key="s.status" class="admin-dist-row">
+                <span class="admin-dist-label">{{ statusLabel(s.status) }}</span>
+                <div class="admin-dist-bar"><div class="admin-dist-fill" :style="{ width: pctOf(s.count) + '%' }"></div></div>
+                <span class="admin-dist-count">{{ s.count }}</span>
+              </div>
+            </div>
+            <div v-else class="admin-muted" style="padding:10px 0">暂无订单</div>
+          </div>
+
+          <div class="admin-panel">
+            <h3 class="admin-panel-title">热销商品 Top 5</h3>
+            <div v-if="stats.top_products.length" class="admin-top">
+              <div v-for="(p, i) in stats.top_products" :key="i" class="admin-top-row">
+                <span class="admin-top-rank">{{ i + 1 }}</span>
+                <img :src="p.image_url" class="admin-top-img" :alt="p.title_en">
+                <div class="admin-top-name"><div>{{ p.title_en }}</div><div class="admin-muted">{{ p.title_cn }}</div></div>
+                <span class="admin-top-rev">{{ money(p.revenue_cents) }}</span>
+                <span class="admin-top-qty">×{{ p.qty }}</span>
+              </div>
+            </div>
+            <div v-else class="admin-muted" style="padding:10px 0">暂无已付款订单</div>
+          </div>
+        </div>
+
+        <!-- 最新订单 + 待办 -->
+        <div class="admin-dash-grid">
+          <div class="admin-panel admin-panel-wide">
+            <h3 class="admin-panel-title">最新订单</h3>
+            <div v-if="stats.recent_orders.length" class="admin-recent">
+              <div v-for="o in stats.recent_orders" :key="o.order_no" class="admin-recent-row" @click="openOrderFromDash(o.order_no)">
+                <strong>{{ o.order_no }}</strong>
+                <span class="admin-recent-cust">{{ o.customer_name }}<div class="admin-muted">{{ o.customer_email }}</div></span>
+                <span class="admin-recent-amt">{{ money(o.total_cents) }}</span>
+                <span class="admin-badge">{{ statusLabel(o.order_status) }}</span>
+              </div>
+            </div>
+            <div v-else class="admin-muted" style="padding:10px 0">暂无订单</div>
+          </div>
+
+          <div class="admin-panel">
+            <h3 class="admin-panel-title">待办</h3>
+            <div class="admin-todo">
+              <button type="button" class="admin-todo-item" :disabled="!stats.pending_wu" @click="go('orders')">
+                <span>待确认西联</span><b>{{ stats.pending_wu }}</b>
+              </button>
+              <button type="button" class="admin-todo-item" :disabled="!stats.new_inquiries" @click="go('inquiries')">
+                <span>新询盘</span><b>{{ stats.new_inquiries }}</b>
+              </button>
+              <button type="button" class="admin-todo-item" :disabled="!stats.low_stock_items" @click="go('products')">
+                <span>低库存</span><b>{{ stats.low_stock_items }}</b>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Products -->
@@ -191,7 +281,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import api from '../api/client';
 
@@ -239,7 +329,28 @@ async function uploadImage(e) {
 }
 
 const money = (cents) => `$${(cents / 100).toFixed(2)}`;
+const moneyShort = (cents) => `$${Math.round((cents || 0) / 100)}`;
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString() : '');
+
+// --- Dashboard chart helpers (zero-dependency SVG) ---
+const CHART_W = 560, CHART_TOP = 20, CHART_BOTTOM = 142;
+const dailyOrders = computed(() => (stats.value.daily || []).map((d) => Number(d.orders)));
+const dailyRevenue = computed(() => (stats.value.daily || []).map((d) => Number(d.revenue_cents)));
+const distributionTotal = computed(() => (stats.value.status_distribution || []).reduce((s, d) => s + Number(d.count), 0));
+const dayLabel = (i) => {
+  const d = (stats.value.daily || [])[i];
+  return d ? d.date.slice(5) : '';
+};
+const xOf = (i) => {
+  const len = dailyOrders.value.length || 1;
+  return 28 + i * ((CHART_W - 56) / (len - 1 || 1));
+};
+const yOf = (v, arr) => {
+  const max = Math.max(...arr, 1);
+  return CHART_BOTTOM - (v / max) * (CHART_BOTTOM - CHART_TOP);
+};
+const linePoints = (arr) => arr.map((v, i) => `${xOf(i)},${yOf(v, arr)}`).join(' ');
+const pctOf = (count) => (distributionTotal.value ? ((count / distributionTotal.value) * 100).toFixed(1) : 0);
 const statusLabels = {
   pending: '待付款', awaiting_confirmation: '待确认', confirmed: '已确认', paid: '已付款',
   shipped: '已发货', completed: '已完成', cancelled: '已取消', refunded: '已退款',
@@ -285,6 +396,11 @@ async function openOrder(orderNo) {
   const d = await api.get(`/admin/orders/${orderNo}`);
   selectedOrder.value = d.order;
   orderItems.value = d.items || [];
+}
+/** Dashboard "最新订单" click: switch to the orders tab, then open the detail. */
+async function openOrderFromDash(orderNo) {
+  go('orders');
+  await openOrder(orderNo);
 }
 async function markPaid(orderNo) {
   await api.post(`/admin/orders/${orderNo}/mark-paid`);
@@ -405,6 +521,58 @@ onMounted(loadAll);
 .admin-stat { background: #fff; border: 1px solid #e6e2dc; border-radius: 10px; padding: 16px 18px; }
 .admin-stat-value { font-size: 24px; font-weight: 700; }
 .admin-stat-label { color: #6b6b6b; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+/* Dashboard panels */
+.admin-dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+@media (max-width: 760px) { .admin-dash-grid { grid-template-columns: 1fr; } }
+.admin-panel { background: #fff; border: 1px solid #e6e2dc; border-radius: 10px; padding: 16px 18px; }
+.admin-panel-wide { grid-column: 1 / -1; }
+.admin-panel-title { font-size: 13px; font-weight: 700; color: #1f1f1f; margin: 0 0 12px; text-transform: uppercase; letter-spacing: .4px; }
+
+/* Charts */
+.admin-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 760px) { .admin-chart-row { grid-template-columns: 1fr; } }
+.admin-chart-label { font-size: 12px; color: #6b6b6b; margin-bottom: 6px; }
+.admin-svg { width: 100%; height: auto; display: block; }
+.admin-svg-val { font-size: 11px; fill: #6b6b6b; }
+.admin-svg-date { font-size: 10px; fill: #a0a0a0; }
+
+/* Status distribution */
+.admin-dist { display: flex; flex-direction: column; gap: 9px; }
+.admin-dist-row { display: flex; align-items: center; gap: 10px; }
+.admin-dist-label { width: 86px; font-size: 12px; color: #6b6b6b; flex-shrink: 0; }
+.admin-dist-bar { flex: 1; height: 12px; background: #f0ede8; border-radius: 6px; overflow: hidden; }
+.admin-dist-fill { height: 100%; background: #a8835c; border-radius: 6px; }
+.admin-dist-count { width: 26px; text-align: right; font-weight: 700; font-size: 12px; }
+
+/* Top products */
+.admin-top { display: flex; flex-direction: column; }
+.admin-top-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f2efe9; }
+.admin-top-row:last-child { border-bottom: 0; }
+.admin-top-rank { width: 18px; font-weight: 700; color: #a8835c; font-size: 13px; }
+.admin-top-img { width: 38px; height: 38px; object-fit: cover; border-radius: 7px; border: 1px solid #e6e2dc; flex-shrink: 0; }
+.admin-top-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; }
+.admin-top-rev { font-weight: 700; font-size: 13px; }
+.admin-top-qty { color: #6b6b6b; font-size: 12px; }
+
+/* Recent orders */
+.admin-recent { display: flex; flex-direction: column; }
+.admin-recent-row { display: flex; align-items: center; gap: 14px; padding: 9px 6px; border-bottom: 1px solid #f2efe9; cursor: pointer; }
+.admin-recent-row:last-child { border-bottom: 0; }
+.admin-recent-row:hover { background: #fcfbf9; }
+.admin-recent-cust { flex: 1; min-width: 0; font-size: 13px; }
+.admin-recent-amt { font-weight: 700; font-size: 13px; }
+
+/* Todo shortcuts */
+.admin-todo { display: flex; flex-direction: column; gap: 8px; }
+.admin-todo-item {
+  display: flex; justify-content: space-between; align-items: center; padding: 11px 13px;
+  border: 1px solid #e6e2dc; border-radius: 8px; background: #fff; cursor: pointer;
+  font-size: 13px; color: #1f1f1f; font-weight: 600;
+}
+.admin-todo-item:hover:not(:disabled) { border-color: #a8835c; }
+.admin-todo-item:disabled { opacity: .5; cursor: default; }
+.admin-todo-item b { color: #a8835c; }
 .admin-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e6e2dc; border-radius: 10px; margin-top: 14px; }
 .admin-table th, .admin-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e6e2dc; }
 .admin-table th { font-size: 12px; text-transform: uppercase; color: #6b6b6b; }

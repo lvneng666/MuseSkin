@@ -170,11 +170,18 @@ const titleOf = (p) => (i18n.lang === 'cn' ? p.title_cn : p.title_en);
 const ritualDesc = (p) => (i18n.lang === 'cn' ? (p.ritual_desc_cn || p.desc_cn) : (p.ritual_desc_en || p.desc_en));
 const money = (cents) => `$${(cents / 100).toFixed(2)} USD`;
 
-// Homepage showcases only the three hero ritual products; the full catalog lives on /shop.
-const RITUAL_SLUGS = ['the-active-serum', 'the-luxury-cream', 'the-gentle-cleanser'];
-const ritualProducts = computed(() =>
-  RITUAL_SLUGS.map((slug) => products.value.find((p) => p.slug === slug)).filter(Boolean)
-);
+// Homepage shows products marked "Featured" in the admin (ordered by sort order).
+// Falls back to the three hero rituals until the admin marks any as featured.
+const FALLBACK_RITUAL_SLUGS = ['the-active-serum', 'the-luxury-cream', 'the-gentle-cleanser'];
+const ritualProducts = computed(() => {
+  const featured = products.value
+    .filter((p) => p.featured)
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  if (featured.length) return featured;
+  return FALLBACK_RITUAL_SLUGS
+    .map((slug) => products.value.find((p) => p.slug === slug))
+    .filter(Boolean);
+});
 
 const contact = reactive({ name: '', email: '', interest: '', message: '' });
 const contactError = ref('');

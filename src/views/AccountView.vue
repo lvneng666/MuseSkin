@@ -62,6 +62,7 @@
               <label><span>{{ i18n.t('Email address', '电子邮箱') }}</span><input v-model="forgotEmail" type="email" required></label>
               <div v-if="forgotError" class="checkout-error">{{ forgotError }}</div>
               <div v-if="forgotSent" class="form-feedback success-message">{{ i18n.t('Reset link sent. Check your inbox.', '重置链接已发送，请查收邮件。') }}</div>
+              <div v-if="forgotSent" class="spam-note">{{ i18n.t('Didn\'t see the email? Check your spam or junk folder.', '没收到邮件？请检查垃圾邮件或广告邮件文件夹。') }}</div>
               <button class="shop-button shop-button-light shop-button-full" type="submit" :disabled="forgotSending">
                 {{ forgotSending ? i18n.t('Sending…', '发送中…') : i18n.t('Send reset link', '发送重置链接') }}
               </button>

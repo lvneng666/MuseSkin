@@ -66,6 +66,7 @@
           <div v-if="order.paypal_client_id" id="paypal-button-container"></div>
           <div v-else class="checkout-success" style="padding:0">
             <p>{{ i18n.t('Online payment is being set up. We will email you at ', '在线支付正在配置中，我们会通过邮件 ' ) }}{{ form.email || order.customer_email }}{{ i18n.t(' to confirm your order.', ' 与你确认订单。') }}</p>
+            <p class="spam-note">{{ i18n.t('Didn\'t see the email? Check your spam or junk folder.', '没收到邮件？请检查垃圾邮件或广告邮件文件夹。') }}</p>
             <button class="shop-button shop-button-dark shop-button-full" @click="finishSuccess(order, i18n.t('Your order has been placed. We will email you to confirm.', '订单已提交，我们会邮件与你确认。'))">
               {{ i18n.t('I understand', '我知道了') }}
             </button>
@@ -77,6 +78,7 @@
           <h3>{{ i18n.t('Thank you.', '谢谢你。') }}</h3>
           <p class="success-order-no">{{ i18n.t('Order number', '订单号') }}: {{ order?.order_no }}</p>
           <p>{{ successMessage }}</p>
+          <p class="spam-note">{{ i18n.t('Didn\'t see the email? Check your spam or junk folder.', '没收到邮件？请检查垃圾邮件或广告邮件文件夹。') }}</p>
         </div>
       </div>
     </main>

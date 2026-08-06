@@ -62,6 +62,7 @@ const TRANSLATIONS = {
   'Go to sign in': { cn: '去登录', ja: 'ログインへ', fr: 'Se connecter', de: 'Zur Anmeldung', es: 'Ir a iniciar sesión' },
   'This link is missing a reset token. Use the link from the email we sent you.': { cn: '此链接缺少重置令牌，请使用邮件中的链接。', ja: 'このリンクには再設定トークンがありません。メール内のリンクをご利用ください。', fr: 'Ce lien est invalide. Utilisez le lien envoyé par e-mail.', de: 'Diesem Link fehlt ein Zurücksetzungs-Token. Nutzen Sie den Link aus unserer E-Mail.', es: 'A este enlace le falta un token. Usa el enlace del correo que te enviamos.' },
   'Saving…': { cn: '保存中…', ja: '保存中…', fr: 'Enregistrement…', de: 'Speichern…', es: 'Guardando…' },
+  'Didn\'t see the email? Check your spam or junk folder.': { cn: '没收到邮件？请检查垃圾邮件或广告邮件文件夹。', ja: 'メールが届いていませんか？迷惑メールフォルダをご確認ください。', fr: 'Vous n\'avez pas reçu l\'e-mail ? Vérifiez votre dossier spam ou courrier indésirable.', de: 'E-Mail nicht erhalten? Prüfen Sie Ihren Spam- oder Junk-Ordner.', es: '¿No has recibido el correo? Revisa tu carpeta de spam o correo no deseado.' },
 };
 
 /** Multi-language store (Default: English). Components pick copy via t(en, cn). */

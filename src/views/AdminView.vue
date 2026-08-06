@@ -123,6 +123,11 @@
             <button class="admin-btn admin-btn-ghost" @click="closeProductForm">×</button>
           </div>
           <div class="admin-modal-body">
+            <div class="admin-lang-tabs">
+              <button type="button" :class="{ active: lang === 'en' }" @click="lang = 'en'">EN</button>
+              <button type="button" :class="{ active: lang === 'cn' }" @click="lang = 'cn'">中文</button>
+              <span class="admin-lang-hint">中英文字段切换语言分别填写</span>
+            </div>
             <div class="admin-img-preview">
               <img :src="productForm.image_url || 'https://pub-43406c238a96463d95e2178d10ae1446.r2.dev/assets/hero.webp'"
                    :alt="productForm.title_en">
@@ -134,10 +139,8 @@
                   <option>face</option><option>body</option><option>protection</option>
                 </select>
               </label>
-              <label>标题（英）<input v-model="productForm.title_en" class="admin-input" required></label>
-              <label>标题（中）<input v-model="productForm.title_cn" class="admin-input" required></label>
-              <label>分类标签（英）<input v-model="productForm.category_en" class="admin-input"></label>
-              <label>分类标签（中）<input v-model="productForm.category_cn" class="admin-input"></label>
+              <label>标题<input v-model="productForm[F('title_en')]" class="admin-input" required></label>
+              <label>分类标签<input v-model="productForm[F('category_en')]" class="admin-input"></label>
               <label>价格（美元）<input v-model.number="productForm.price" class="admin-input" type="number" step="0.01" min="0"></label>
               <label>库存<input v-model.number="productForm.stock" class="admin-input" type="number" min="0"></label>
               <label>图片地址<input v-model="productForm.image_url" class="admin-input"></label>
@@ -148,29 +151,20 @@
                   <option>active</option><option>inactive</option>
                 </select>
               </label>
-              <label>标签（英）<input v-model="productForm.tag_en" class="admin-input"></label>
-              <label>标签（中）<input v-model="productForm.tag_cn" class="admin-input"></label>
+              <label>标签<input v-model="productForm[F('tag_en')]" class="admin-input"></label>
             </div>
             <div class="admin-form-grid">
-              <label>描述（英）<textarea v-model="productForm.desc_en" class="admin-input" rows="2"></textarea></label>
-              <label>描述（中）<textarea v-model="productForm.desc_cn" class="admin-input" rows="2"></textarea></label>
-              <label>核心成分（英）<input v-model="productForm.active_en" class="admin-input"></label>
-              <label>核心成分（中）<input v-model="productForm.active_cn" class="admin-input"></label>
-              <label>适合肤质（英）<input v-model="productForm.skin_en" class="admin-input"></label>
-              <label>适合肤质（中）<input v-model="productForm.skin_cn" class="admin-input"></label>
-              <label>使用方法（英）<input v-model="productForm.usage_en" class="admin-input"></label>
-              <label>使用方法（中）<input v-model="productForm.usage_cn" class="admin-input"></label>
+              <label>描述<textarea v-model="productForm[F('desc_en')]" class="admin-input" rows="2"></textarea></label>
+              <label>核心成分<input v-model="productForm[F('active_en')]" class="admin-input"></label>
+              <label>适合肤质<input v-model="productForm[F('skin_en')]" class="admin-input"></label>
+              <label>使用方法<input v-model="productForm[F('usage_en')]" class="admin-input"></label>
             </div>
             <div class="admin-form-grid">
-              <label>卡片描述（英）<textarea v-model="productForm.grid_desc_en" class="admin-input" rows="2"></textarea></label>
-              <label>卡片描述（中）<textarea v-model="productForm.grid_desc_cn" class="admin-input" rows="2"></textarea></label>
-              <label>MOQ（英）<input v-model="productForm.moq_en" class="admin-input"></label>
-              <label>MOQ（中）<input v-model="productForm.moq_cn" class="admin-input"></label>
+              <label>卡片描述<textarea v-model="productForm[F('grid_desc_en')]" class="admin-input" rows="2"></textarea></label>
+              <label>MOQ<input v-model="productForm[F('moq_en')]" class="admin-input"></label>
               <label>首页分类（空格分隔）<input v-model="productForm.ritual_categories" class="admin-input"></label>
-              <label>首页标签（英）<input v-model="productForm.ritual_tag_en" class="admin-input"></label>
-              <label>首页标签（中）<input v-model="productForm.ritual_tag_cn" class="admin-input"></label>
-              <label>首页卡片描述（英）<textarea v-model="productForm.ritual_desc_en" class="admin-input" rows="2"></textarea></label>
-              <label>首页卡片描述（中）<textarea v-model="productForm.ritual_desc_cn" class="admin-input" rows="2"></textarea></label>
+              <label>首页标签<input v-model="productForm[F('ritual_tag_en')]" class="admin-input"></label>
+              <label>首页卡片描述<textarea v-model="productForm[F('ritual_desc_en')]" class="admin-input" rows="2"></textarea></label>
             </div>
             <div v-if="productFormError" class="admin-error">{{ productFormError }}</div>
             <div class="admin-actions">
@@ -207,6 +201,10 @@ const editingProduct = ref(null);
 const productForm = ref({});
 const productFormError = ref('');
 const saving = ref(false);
+
+// Language tab for the bilingual product form: shows *_en or *_cn fields at a time.
+const lang = ref('en');
+const F = (enKey) => (lang.value === 'en' ? enKey : enKey.replace(/_en$/, '_cn'));
 
 const money = (cents) => `$${(cents / 100).toFixed(2)}`;
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString() : '');
@@ -288,10 +286,12 @@ function openNewProduct() {
   editingProduct.value = null;
   productForm.value = emptyForm();
   productFormError.value = '';
+  lang.value = 'en';
   productFormOpen.value = true;
 }
 function openProductForm(p) {
   editingProduct.value = p;
+  lang.value = (p.title_en && p.title_en.trim()) ? 'en' : 'cn';
   productForm.value = {
     slug: p.slug, title_en: p.title_en, title_cn: p.title_cn, category: p.category,
     category_en: p.category_en, category_cn: p.category_cn,
@@ -406,6 +406,13 @@ onMounted(loadAll);
   padding: 16px 22px; border-bottom: 1px solid #e6e2dc;
 }
 .admin-modal-body { padding: 20px 22px 26px; }
+.admin-lang-tabs { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+.admin-lang-tabs button {
+  padding: 6px 16px; border-radius: 8px; border: 1px solid #d8d2ca; background: #fff;
+  cursor: pointer; font-size: 12px; font-weight: 600; color: #6b6b6b;
+}
+.admin-lang-tabs button.active { background: #1f1f1f; color: #fff; border-color: #1f1f1f; }
+.admin-lang-hint { margin-left: 8px; font-size: 12px; color: #a0a0a0; }
 .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-bottom: 14px; }
 .admin-form-grid label { display: block; font-size: 12px; font-weight: 600; color: #6b6b6b; text-transform: uppercase; letter-spacing: .4px; }
 .admin-input {

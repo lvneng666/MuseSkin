@@ -8,6 +8,7 @@ const routes = [
   { path: '/checkout', name: 'checkout', component: () => import('../views/CheckoutView.vue') },
   { path: '/about', name: 'about', component: () => import('../views/AboutView.vue') },
   { path: '/account', name: 'account', component: () => import('../views/AccountView.vue') },
+  { path: '/reset-password', name: 'reset-password', component: () => import('../views/ResetPasswordView.vue') },
   { path: '/terms', name: 'terms', component: () => import('../views/TermsView.vue') },
   { path: '/privacy', name: 'privacy', component: () => import('../views/PrivacyView.vue') },
   { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { admin: true } },

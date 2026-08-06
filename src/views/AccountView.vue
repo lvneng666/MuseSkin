@@ -45,12 +45,29 @@
             <button class="auth-tab" :class="{ active: tab === 'login' }" @click="tab = 'login'">{{ i18n.t('Sign in', '登录') }}</button>
             <button class="auth-tab" :class="{ active: tab === 'register' }" @click="tab = 'register'">{{ i18n.t('Create account', '注册') }}</button>
           </div>
-          <form v-if="tab === 'login'" id="checkout-form" @submit.prevent="doLogin">
-            <label><span>{{ i18n.t('Username or email', '用户名或邮箱') }}</span><input v-model="identifier" type="text" required></label>
-            <label><span>{{ i18n.t('Password', '密码') }}</span><input v-model="password" type="password" required></label>
-            <div v-if="error" class="checkout-error">{{ error }}</div>
-            <button class="shop-button shop-button-dark shop-button-full" type="submit">{{ i18n.t('Sign in', '登录') }}</button>
-          </form>
+
+          <template v-if="tab === 'login'">
+            <form id="checkout-form" @submit.prevent="doLogin">
+              <label><span>{{ i18n.t('Username or email', '用户名或邮箱') }}</span><input v-model="identifier" type="text" required></label>
+              <label><span>{{ i18n.t('Password', '密码') }}</span><input v-model="password" type="password" required></label>
+              <div v-if="error" class="checkout-error">{{ error }}</div>
+              <button class="shop-button shop-button-dark shop-button-full" type="submit">{{ i18n.t('Sign in', '登录') }}</button>
+            </form>
+
+            <button type="button" class="forgot-toggle" @click="forgotOpen = !forgotOpen">
+              {{ forgotOpen ? i18n.t('Cancel', '取消') : i18n.t('Forgot password?', '忘记密码？') }}
+            </button>
+
+            <form v-if="forgotOpen" id="checkout-form" class="forgot-form" @submit.prevent="doForgot">
+              <label><span>{{ i18n.t('Email address', '电子邮箱') }}</span><input v-model="forgotEmail" type="email" required></label>
+              <div v-if="forgotError" class="checkout-error">{{ forgotError }}</div>
+              <div v-if="forgotSent" class="form-feedback success-message">{{ i18n.t('Reset link sent. Check your inbox.', '重置链接已发送，请查收邮件。') }}</div>
+              <button class="shop-button shop-button-light shop-button-full" type="submit" :disabled="forgotSending">
+                {{ forgotSending ? i18n.t('Sending…', '发送中…') : i18n.t('Send reset link', '发送重置链接') }}
+              </button>
+            </form>
+          </template>
+
           <form v-else id="checkout-form" @submit.prevent="doRegister">
             <label><span>{{ i18n.t('Full name', '姓名') }}</span><input v-model="fullName" type="text" required></label>
             <label><span>{{ i18n.t('Username (optional)', '用户名（选填）') }}</span><input v-model="username" type="text" maxlength="50"></label>
@@ -119,6 +136,11 @@ const lookupEmail = ref('');
 const lookupOrderNo = ref('');
 const lookupResult = ref(null);
 const lookupError = ref('');
+const forgotOpen = ref(false);
+const forgotEmail = ref('');
+const forgotSent = ref(false);
+const forgotError = ref('');
+const forgotSending = ref(false);
 const googleClientId = ref(null);
 
 const googleError = ref('');
@@ -234,6 +256,20 @@ async function doLookup() {
     lookupError.value = e.message;
   }
 }
+async function doForgot() {
+  forgotError.value = '';
+  forgotSent.value = false;
+  forgotSending.value = true;
+  try {
+    // Backend always returns ok (avoids account enumeration); reset link goes to the email.
+    await api.post('/auth/forgot-password', { email: forgotEmail.value });
+    forgotSent.value = true;
+  } catch (e) {
+    forgotError.value = e.message;
+  } finally {
+    forgotSending.value = false;
+  }
+}
 
 onMounted(async () => {
   await initGoogle();
@@ -267,4 +303,17 @@ onMounted(async () => {
   color: #a08365;
   text-decoration: underline;
 }
+.forgot-toggle {
+  display: inline-block;
+  border: 0;
+  background: transparent;
+  color: #a08365;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 2px 0 16px;
+  padding: 0;
+}
+.forgot-toggle:hover { color: var(--shop-green); }
+.forgot-form { margin-top: 2px; }
 </style>

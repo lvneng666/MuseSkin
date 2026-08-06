@@ -46,6 +46,22 @@ const TRANSLATIONS = {
   'Shop the collection': { cn: '查看产品系列', ja: 'コレクションを見る', fr: 'Découvrir la collection', de: 'Kollektion entdecken', es: 'Ver la colección' },
   'The Peaffee Ritual': { cn: 'Peaffee 护理仪式', ja: 'Peaffee ケアの儀式', fr: 'Le rituel Peaffee', de: 'Das Peaffee-Ritual', es: 'El ritual Peaffee' },
   'Explore the full collection': { cn: '浏览完整产品系列', ja: 'コレクションをすべて見る', fr: 'Découvrir toute la collection', de: 'Die ganze Kollektion entdecken', es: 'Explorar toda la colección' },
+  'Forgot password?': { cn: '忘记密码？', ja: 'パスワードをお忘れですか？', fr: 'Mot de passe oublié ?', de: 'Passwort vergessen?', es: '¿Olvidaste tu contraseña?' },
+  'Cancel': { cn: '取消', ja: 'キャンセル', fr: 'Annuler', de: 'Abbrechen', es: 'Cancelar' },
+  'Enter your email and we will send you a reset link.': { cn: '输入你的邮箱，我们会发送重置链接。', ja: 'メールアドレスを入力すると、再設定用リンクをお送りします。', fr: 'Saisissez votre e-mail, nous vous enverrons un lien de réinitialisation.', de: 'Geben Sie Ihre E-Mail-Adresse ein, wir senden Ihnen einen Link zum Zurücksetzen.', es: 'Introduce tu correo y te enviaremos un enlace para restablecerla.' },
+  'Send reset link': { cn: '发送重置链接', ja: '再設定リンクを送信', fr: 'Envoyer le lien', de: 'Link senden', es: 'Enviar enlace' },
+  'Reset link sent. Check your inbox.': { cn: '重置链接已发送，请查收邮件。', ja: '再設定リンクを送信しました。メールをご確認ください。', fr: 'Lien envoyé. Vérifiez votre boîte de réception.', de: 'Link gesendet. Prüfen Sie Ihren Posteingang.', es: 'Enlace enviado. Revisa tu bandeja de entrada.' },
+  'Reset password': { cn: '重置密码', ja: 'パスワード再設定', fr: 'Réinitialiser le mot de passe', de: 'Passwort zurücksetzen', es: 'Restablecer contraseña' },
+  'Choose a new password.': { cn: '设置一个新密码。', ja: '新しいパスワードを設定してください。', fr: 'Choisissez un nouveau mot de passe.', de: 'Wählen Sie ein neues Passwort.', es: 'Elige una nueva contraseña.' },
+  'New password': { cn: '新密码', ja: '新しいパスワード', fr: 'Nouveau mot de passe', de: 'Neues Passwort', es: 'Nueva contraseña' },
+  'Confirm password': { cn: '确认密码', ja: 'パスワード（確認）', fr: 'Confirmer le mot de passe', de: 'Passwort bestätigen', es: 'Confirmar contraseña' },
+  'Set new password': { cn: '设置新密码', ja: 'パスワードを設定', fr: 'Définir le nouveau mot de passe', de: 'Neues Passwort festlegen', es: 'Establecer nueva contraseña' },
+  'Password must be at least 8 characters': { cn: '密码至少 8 位', ja: 'パスワードは8文字以上で入力してください', fr: 'Le mot de passe doit contenir au moins 8 caractères', de: 'Das Passwort muss mindestens 8 Zeichen lang sein', es: 'La contraseña debe tener al menos 8 caracteres' },
+  'Passwords do not match': { cn: '两次输入的密码不一致', ja: 'パスワードが一致しません', fr: 'Les mots de passe ne correspondent pas', de: 'Die Passwörter stimmen nicht überein', es: 'Las contraseñas no coinciden' },
+  'Your password has been reset. You can now sign in.': { cn: '密码已重置，现在可以登录了。', ja: 'パスワードがリセットされました。ログインできます。', fr: 'Votre mot de passe a été réinitialisé. Vous pouvez vous connecter.', de: 'Ihr Passwort wurde zurückgesetzt. Sie können sich jetzt anmelden.', es: 'Tu contraseña se ha restablecido. Ya puedes iniciar sesión.' },
+  'Go to sign in': { cn: '去登录', ja: 'ログインへ', fr: 'Se connecter', de: 'Zur Anmeldung', es: 'Ir a iniciar sesión' },
+  'This link is missing a reset token. Use the link from the email we sent you.': { cn: '此链接缺少重置令牌，请使用邮件中的链接。', ja: 'このリンクには再設定トークンがありません。メール内のリンクをご利用ください。', fr: 'Ce lien est invalide. Utilisez le lien envoyé par e-mail.', de: 'Diesem Link fehlt ein Zurücksetzungs-Token. Nutzen Sie den Link aus unserer E-Mail.', es: 'A este enlace le falta un token. Usa el enlace del correo que te enviamos.' },
+  'Saving…': { cn: '保存中…', ja: '保存中…', fr: 'Enregistrement…', de: 'Speichern…', es: 'Guardando…' },
 };
 
 /** Multi-language store (Default: English). Components pick copy via t(en, cn). */

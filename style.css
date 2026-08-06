@@ -1501,6 +1501,11 @@ h1, h2, h3, h4 {
     border-color: var(--color-text-main);
 }
 
+.rituals-cta {
+    text-align: center;
+    margin-top: 48px;
+}
+
 /* Double-Column Connect Section */
 .connect-grid {
     display: grid;

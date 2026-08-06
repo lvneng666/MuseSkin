@@ -68,11 +68,11 @@
     <section class="rituals-section" id="rituals">
       <div class="container">
         <div class="section-header">
-          <span class="section-subtitle">{{ i18n.t('Peaffee Collection', 'Peaffee 产品系列') }}</span>
+          <span class="section-subtitle">{{ i18n.t('The Peaffee Ritual', 'Peaffee 护理仪式') }}</span>
           <h2 class="section-title">{{ i18n.t('The rituals you return to.', '值得反复使用的日常护理。') }}</h2>
         </div>
-        <div v-if="products.length" class="rituals-grid">
-          <div v-for="p in products" :key="p.slug" class="ritual-card">
+        <div v-if="ritualProducts.length" class="rituals-grid">
+          <div v-for="p in ritualProducts" :key="p.slug" class="ritual-card">
             <div class="ritual-image-wrapper">
               <img :src="p.image_url" :alt="titleOf(p)" class="ritual-image" width="300" height="300" loading="lazy" decoding="async">
               <span class="ritual-active-tag">{{ p.ritual_tag_en || p.tag_en }}</span>
@@ -87,7 +87,10 @@
             </div>
           </div>
         </div>
-        <div v-else class="section-header"><p>{{ i18n.t('Loading products…', '加载中…') }}</p></div>
+        <div v-else-if="!products.length" class="section-header"><p>{{ i18n.t('Loading products…', '加载中…') }}</p></div>
+        <div v-if="products.length" class="rituals-cta">
+          <router-link to="/shop" class="btn btn-primary">{{ i18n.t('Explore the full collection', '浏览完整产品系列') }}</router-link>
+        </div>
       </div>
     </section>
 
@@ -166,6 +169,12 @@ function prev() { index.value = (index.value + 2) % 3; }
 const titleOf = (p) => (i18n.lang === 'cn' ? p.title_cn : p.title_en);
 const ritualDesc = (p) => (i18n.lang === 'cn' ? (p.ritual_desc_cn || p.desc_cn) : (p.ritual_desc_en || p.desc_en));
 const money = (cents) => `$${(cents / 100).toFixed(2)} USD`;
+
+// Homepage showcases only the three hero ritual products; the full catalog lives on /shop.
+const RITUAL_SLUGS = ['the-active-serum', 'the-luxury-cream', 'the-gentle-cleanser'];
+const ritualProducts = computed(() =>
+  RITUAL_SLUGS.map((slug) => products.value.find((p) => p.slug === slug)).filter(Boolean)
+);
 
 const contact = reactive({ name: '', email: '', interest: '', message: '' });
 const contactError = ref('');

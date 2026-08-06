@@ -44,6 +44,8 @@ const TRANSLATIONS = {
   'Thoughtful care': { cn: '贴心护理', ja: '心を込めたケア', fr: 'Soins attentionnés', de: 'Aufmerksame Pflege', es: 'Cuidado atento' },
   'Begin your ritual.': { cn: '开启你的护理仪式。', ja: 'あなたの儀式を始めましょう。', fr: 'Commencez votre rituel.', de: 'Beginnen Sie Ihr Ritual.', es: 'Comienza tu ritual.' },
   'Shop the collection': { cn: '查看产品系列', ja: 'コレクションを見る', fr: 'Découvrir la collection', de: 'Kollektion entdecken', es: 'Ver la colección' },
+  'The Peaffee Ritual': { cn: 'Peaffee 护理仪式', ja: 'Peaffee ケアの儀式', fr: 'Le rituel Peaffee', de: 'Das Peaffee-Ritual', es: 'El ritual Peaffee' },
+  'Explore the full collection': { cn: '浏览完整产品系列', ja: 'コレクションをすべて見る', fr: 'Découvrir toute la collection', de: 'Die ganze Kollektion entdecken', es: 'Explorar toda la colección' },
 };
 
 /** Multi-language store (Default: English). Components pick copy via t(en, cn). */

@@ -128,9 +128,14 @@
               <button type="button" :class="{ active: lang === 'cn' }" @click="lang = 'cn'">中文</button>
               <span class="admin-lang-hint">中英文字段切换语言分别填写</span>
             </div>
-            <div class="admin-img-preview">
+            <div class="admin-img-preview" role="button" :title="productForm.image_url ? '点击修改图片' : '点击上传图片'"
+                 @click="uploadImgInput.click()">
               <img :src="productForm.image_url || 'https://pub-43406c238a96463d95e2178d10ae1446.r2.dev/assets/hero.webp'"
                    :alt="productForm.title_en">
+              <div class="admin-img-overlay">
+                <span>{{ uploading ? '上传中…' : (productForm.image_url ? '点击修改图片' : '点击上传图片') }}</span>
+              </div>
+              <input ref="uploadImgInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-hidden" @change="uploadImage">
             </div>
             <div class="admin-form-grid">
               <label>Slug（网址标识）<input v-model="productForm.slug" class="admin-input" required></label>
@@ -144,13 +149,7 @@
               <label>价格（美元）<input v-model.number="productForm.price" class="admin-input" type="number" step="0.01" min="0"></label>
               <label>库存<input v-model.number="productForm.stock" class="admin-input" type="number" min="0"></label>
               <label>图片地址
-                <div class="admin-img-upload">
-                  <input v-model="productForm.image_url" class="admin-input" placeholder="https://… 或点击右侧上传">
-                  <button type="button" class="admin-btn admin-btn-small admin-btn-upload" @click="uploadImgInput.click()" :disabled="uploading">
-                    {{ uploading ? '上传中…' : '上传图片' }}
-                  </button>
-                  <input ref="uploadImgInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-hidden" @change="uploadImage">
-                </div>
+                <input v-model="productForm.image_url" class="admin-input" placeholder="或手动粘贴图片 URL（可留空，点上方图片上传）">
               </label>
               <label>排序<input v-model.number="productForm.sort_order" class="admin-input" type="number"></label>
               <label class="admin-check"><input type="checkbox" v-model="productForm.featured"> Featured</label>
@@ -450,10 +449,16 @@ onMounted(loadAll);
 .admin-input:focus { outline: 2px solid #d9c4a7; border-color: #a8835c; }
 .admin-check { display: flex; align-items: center; gap: 8px; margin-top: 22px; }
 .admin-check input { width: auto; }
-.admin-img-upload { display: flex; gap: 8px; align-items: flex-start; }
-.admin-img-upload .admin-input { flex: 1; min-width: 0; }
-.admin-btn-upload { flex-shrink: 0; }
 .admin-upload-hidden { display: none; }
+.admin-img-preview { position: relative; display: inline-block; cursor: pointer; overflow: hidden; }
+.admin-img-preview img { display: block; }
+.admin-img-overlay {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .45); color: #fff; font-size: 12px; font-weight: 600;
+  border-radius: 10px; opacity: 0; transition: opacity .15s;
+}
+.admin-img-preview:hover .admin-img-overlay { opacity: 1; }
+.admin-img-overlay span { text-align: center; padding: 0 8px; }
 .admin-error { margin: 0 0 12px; padding: 9px 13px; border: 1px solid #d9b3b3; background: #fdf1f1; color: #b23a3a; font-size: 13px; border-radius: 8px; }
 .admin-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid #e6e2dc; }
 .admin-img-preview { margin-bottom: 14px; }

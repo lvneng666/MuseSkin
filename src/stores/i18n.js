@@ -34,6 +34,16 @@ const TRANSLATIONS = {
   'Find your everyday formulas': { cn: '找到你的日常护理', ja: '毎日のフォーミュラを見つける', fr: 'Trouvez vos formules quotidiennes', de: 'Finden Sie Ihre tägliche Pflege', es: 'Encuentra tus fórmulas diarias' },
   'The rituals you return to.': { cn: '值得反复使用的护理仪式。', ja: '毎日続けたくなるスキンケア儀式。', fr: 'Les rituels auxquels vous revenez.', de: 'Rituale für jeden Tag.', es: 'Rituales que querrás repetir.' },
   'Loading products…': { cn: '加载中…', ja: '商品を読み込み中…', fr: 'Chargement des produits…', de: 'Produkte werden geladen…', es: 'Cargando productos…' },
+  'Our Story': { cn: '品牌故事', ja: 'ブランドストーリー', fr: 'Notre histoire', de: 'Unsere Geschichte', es: 'Nuestra historia' },
+  'Contact': { cn: '联系我们', ja: 'お問い合わせ', fr: 'Contact', de: 'Kontakt', es: 'Contacto' },
+  'Shop by category': { cn: '按类目选购', ja: 'カテゴリから選ぶ', fr: 'Acheter par catégorie', de: 'Nach Kategorie stöbern', es: 'Comprar por categoría' },
+  'Botanical skincare for the rituals you return to.': { cn: '为值得反复使用的日常仪式而生的植物护肤。', ja: '毎日続けたくなるスキンケアのために。', fr: 'Des soins botaniques pour vos rituels quotidiens.', de: 'Pflanzliche Pflege für Ihre täglichen Rituale.', es: 'Cuidado botánico para tus rituales diarios.' },
+  'Our philosophy': { cn: '我们的理念', ja: '私たちの哲学', fr: 'Notre philosophie', de: 'Unsere Philosophie', es: 'Nuestra filosofía' },
+  'Botanical-first': { cn: '植物为本', ja: '植物由来', fr: 'Le végétal d\'abord', de: 'Pflanzlich zuerst', es: 'Primero lo botánico' },
+  'Small-batch': { cn: '小批量精制', ja: '小ロット製法', fr: 'Petits lots', de: 'Kleine Chargen', es: 'Pequeños lotes' },
+  'Thoughtful care': { cn: '贴心护理', ja: '心を込めたケア', fr: 'Soins attentionnés', de: 'Aufmerksame Pflege', es: 'Cuidado atento' },
+  'Begin your ritual.': { cn: '开启你的护理仪式。', ja: 'あなたの儀式を始めましょう。', fr: 'Commencez votre rituel.', de: 'Beginnen Sie Ihr Ritual.', es: 'Comienza tu ritual.' },
+  'Shop the collection': { cn: '查看产品系列', ja: 'コレクションを見る', fr: 'Découvrir la collection', de: 'Kollektion entdecken', es: 'Ver la colección' },
 };
 
 /** Multi-language store (Default: English). Components pick copy via t(en, cn). */

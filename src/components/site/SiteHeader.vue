@@ -6,7 +6,25 @@
       </router-link>
       <nav class="shop-nav" aria-label="Site navigation">
         <router-link to="/" class="nav-link">{{ i18n.t('Home', '首页') }}</router-link>
-        <router-link to="/shop" class="nav-link">{{ i18n.t('Shop', '产品系列') }}</router-link>
+
+        <div class="nav-dropdown-wrap" ref="shopDropdownRef" @mouseenter="shopMenuOpen = true" @mouseleave="shopMenuOpen = false">
+          <button type="button" class="nav-link nav-link-btn nav-link-caret" :class="{ open: shopMenuOpen }" :aria-expanded="shopMenuOpen" @click="shopMenuOpen = !shopMenuOpen">
+            {{ i18n.t('Shop', '产品系列') }}
+          </button>
+          <div v-if="shopMenuOpen" class="nav-dropdown" role="menu">
+            <router-link
+              v-for="c in categories"
+              :key="c.key"
+              :to="{ path: '/shop', query: c.key === 'all' ? {} : { category: c.key } }"
+              class="nav-dropdown-link"
+              role="menuitem"
+              @click="shopMenuOpen = false"
+            >{{ c.label }}</router-link>
+          </div>
+        </div>
+
+        <router-link to="/about" class="nav-link">{{ i18n.t('Our Story', '品牌故事') }}</router-link>
+        <router-link to="/" class="nav-link" @click.prevent="goContact">{{ i18n.t('Contact', '联系我们') }}</router-link>
         <router-link to="/account" class="nav-link">{{ i18n.t('Account', '账户') }}</router-link>
         <router-link v-if="auth.user?.role === 'admin'" to="/admin" class="nav-link">Admin</router-link>
       </nav>
@@ -57,6 +75,8 @@
           <router-link to="/" class="mobile-link" @click="closeMenu">{{ i18n.t('Home', '首页') }}</router-link>
           <router-link to="/shop" class="mobile-link" @click="closeMenu">{{ i18n.t('Shop', '产品系列') }}</router-link>
           <router-link to="/account" class="mobile-link" @click="closeMenu">{{ i18n.t('Account', '账户') }}</router-link>
+          <router-link to="/about" class="mobile-link" @click="closeMenu">{{ i18n.t('Our Story', '品牌故事') }}</router-link>
+          <router-link to="/" class="mobile-link" @click.prevent="goContact">{{ i18n.t('Contact', '联系我们') }}</router-link>
           <router-link v-if="auth.user?.role === 'admin'" to="/admin" class="mobile-link" @click="closeMenu">Admin</router-link>
 
           <div class="mobile-cat-block">
@@ -100,6 +120,8 @@ const router = useRouter();
 const menuOpen = ref(false);
 const langMenuOpen = ref(false);
 const langDropdownRef = ref(null);
+const shopMenuOpen = ref(false);
+const shopDropdownRef = ref(null);
 const toggleBtnRef = ref(null);
 const drawerRef = ref(null);
 
@@ -117,6 +139,20 @@ function selectLang(code) {
 
 function closeMenu() {
   menuOpen.value = false;
+}
+
+function goContact() {
+  closeMenu();
+  shopMenuOpen.value = false;
+  const scroll = () => {
+    const el = document.getElementById('contact');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+  if (router.currentRoute.value.path === '/') {
+    scroll();
+  } else {
+    router.push('/').then(() => setTimeout(scroll, 120));
+  }
 }
 
 function onKeydown(e) {
@@ -142,11 +178,15 @@ function handleClickOutside(event) {
   if (langDropdownRef.value && !langDropdownRef.value.contains(event.target)) {
     langMenuOpen.value = false;
   }
+  if (shopDropdownRef.value && !shopDropdownRef.value.contains(event.target)) {
+    shopMenuOpen.value = false;
+  }
 }
 
 // Close the drawer if navigation happens outside a drawer link (e.g. logo tap).
 const removeAfterEach = router.afterEach(() => {
   if (menuOpen.value) menuOpen.value = false;
+  if (shopMenuOpen.value) shopMenuOpen.value = false;
 });
 
 onMounted(() => {

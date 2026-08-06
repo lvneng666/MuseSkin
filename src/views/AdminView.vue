@@ -143,7 +143,15 @@
               <label>分类标签<input v-model="productForm[F('category_en')]" class="admin-input"></label>
               <label>价格（美元）<input v-model.number="productForm.price" class="admin-input" type="number" step="0.01" min="0"></label>
               <label>库存<input v-model.number="productForm.stock" class="admin-input" type="number" min="0"></label>
-              <label>图片地址<input v-model="productForm.image_url" class="admin-input"></label>
+              <label>图片地址
+                <div class="admin-img-upload">
+                  <input v-model="productForm.image_url" class="admin-input" placeholder="https://… 或点击右侧上传">
+                  <button type="button" class="admin-btn admin-btn-small admin-btn-upload" @click="uploadImgInput.click()" :disabled="uploading">
+                    {{ uploading ? '上传中…' : '上传图片' }}
+                  </button>
+                  <input ref="uploadImgInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" class="admin-upload-hidden" @change="uploadImage">
+                </div>
+              </label>
               <label>排序<input v-model.number="productForm.sort_order" class="admin-input" type="number"></label>
               <label class="admin-check"><input type="checkbox" v-model="productForm.featured"> Featured</label>
               <label>Status
@@ -205,6 +213,26 @@ const saving = ref(false);
 // Language tab for the bilingual product form: shows *_en or *_cn fields at a time.
 const lang = ref('en');
 const F = (enKey) => (lang.value === 'en' ? enKey : enKey.replace(/_en$/, '_cn'));
+
+// Product image upload — posts the file to the backend, fills image_url with the returned path.
+const uploading = ref(false);
+const uploadImgInput = ref(null);
+async function uploadImage(e) {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = ''; // allow re-selecting the same file next time
+  if (!file) return;
+  uploading.value = true;
+  try {
+    const fd = new FormData();
+    fd.append('image', file);
+    const data = await api.post('/admin/products/upload-image', fd); // axios sets multipart boundary
+    productForm.value.image_url = data.url;
+  } catch (err) {
+    productFormError.value = err.message;
+  } finally {
+    uploading.value = false;
+  }
+}
 
 const money = (cents) => `$${(cents / 100).toFixed(2)}`;
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString() : '');
@@ -422,6 +450,10 @@ onMounted(loadAll);
 .admin-input:focus { outline: 2px solid #d9c4a7; border-color: #a8835c; }
 .admin-check { display: flex; align-items: center; gap: 8px; margin-top: 22px; }
 .admin-check input { width: auto; }
+.admin-img-upload { display: flex; gap: 8px; align-items: flex-start; }
+.admin-img-upload .admin-input { flex: 1; min-width: 0; }
+.admin-btn-upload { flex-shrink: 0; }
+.admin-upload-hidden { display: none; }
 .admin-error { margin: 0 0 12px; padding: 9px 13px; border: 1px solid #d9b3b3; background: #fdf1f1; color: #b23a3a; font-size: 13px; border-radius: 8px; }
 .admin-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid #e6e2dc; }
 .admin-img-preview { margin-bottom: 14px; }

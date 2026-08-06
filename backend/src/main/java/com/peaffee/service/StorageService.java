@@ -50,4 +50,31 @@ public class StorageService {
         if (!p.startsWith(uploadDir)) throw ApiException.forbidden("Invalid path");
         return p;
     }
+
+    /**
+     * Save a product image (raster formats only — no SVG, to avoid stored-XSS on the same
+     * origin). Returns the web path /uploads/<file>.
+     */
+    public String saveProductImage(MultipartFile file) {
+        String ct = file.getContentType();
+        if (ct == null || !ct.startsWith("image/")) {
+            throw ApiException.badRequest("Only image files are allowed");
+        }
+        String ext = switch (ct) {
+            case "image/jpeg" -> ".jpg";
+            case "image/png" -> ".png";
+            case "image/webp" -> ".webp";
+            case "image/gif" -> ".gif";
+            default -> throw ApiException.badRequest("Unsupported image type: " + ct);
+        };
+        byte[] bytes = new byte[8];
+        random.nextBytes(bytes);
+        String filename = "product-" + HexFormat.of().formatHex(bytes) + ext;
+        try {
+            file.transferTo(uploadDir.resolve(filename));
+        } catch (IOException e) {
+            throw ApiException.badRequest("Could not save image");
+        }
+        return "/uploads/" + filename;
+    }
 }

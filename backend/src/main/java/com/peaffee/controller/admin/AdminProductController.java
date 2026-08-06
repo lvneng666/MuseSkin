@@ -4,9 +4,11 @@ import com.peaffee.dto.admin.AdminProductRequest;
 import com.peaffee.entity.Product;
 import com.peaffee.exception.ApiException;
 import com.peaffee.repository.ProductRepository;
+import com.peaffee.service.StorageService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -25,9 +29,17 @@ import java.util.Map;
 public class AdminProductController {
 
     private final ProductRepository productRepository;
+    private final StorageService storageService;
 
-    public AdminProductController(ProductRepository productRepository) {
+    public AdminProductController(ProductRepository productRepository, StorageService storageService) {
         this.productRepository = productRepository;
+        this.storageService = storageService;
+    }
+
+    /** Upload a product image; returns the web path to paste into image_url. */
+    @PostMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String, String> uploadImage(@RequestParam("image") MultipartFile image) {
+        return Map.of("url", storageService.saveProductImage(image));
     }
 
     @GetMapping

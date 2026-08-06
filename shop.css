@@ -25,11 +25,87 @@
 .shop-nav { display: flex; align-items: center; gap: 28px; margin-left: auto; }
 .shop-nav a, .shop-footer-links a { color: var(--shop-muted); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; transition: color .25s ease; }
 .shop-nav a:hover, .shop-footer-links a:hover { color: var(--shop-green); }
-.shop-header-actions { display: flex; align-items: center; gap: 16px; }
+.shop-header-actions { display: flex; align-items: center; gap: 14px; }
 .shop-lang-button, .bag-button { border: 0; background: transparent; color: var(--shop-ink); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
-.shop-lang-button { color: var(--shop-muted); }
-.bag-button { display: inline-flex; gap: 8px; align-items: center; border-left: 1px solid var(--shop-line); padding-left: 18px; }
+.shop-lang-button { color: var(--shop-muted); display: inline-flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 6px; border-radius: 4px; transition: color .2s ease, background .2s ease; }
+.shop-lang-button:hover { color: var(--shop-ink); background: rgba(0, 0, 0, 0.04); }
+.lang-arrow { transition: transform .25s ease; stroke: var(--shop-muted); }
+.lang-arrow.open { transform: rotate(180deg); }
+
+.mobile-header-shop-btn {
+    display: none;
+    color: var(--shop-ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--shop-green);
+    border-radius: 99px;
+    background: rgba(31, 58, 43, 0.06);
+    transition: all .25s ease;
+}
+.mobile-header-shop-btn:hover {
+    background: var(--shop-green);
+    color: #fff !important;
+}
+
+.lang-selector-dropdown { position: relative; display: inline-flex; align-items: center; }
+.lang-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 100;
+    min-width: 145px;
+    background: rgba(250, 249, 246, 0.98);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--shop-line);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(28, 26, 23, 0.12);
+    padding: 6px 0;
+    margin: 0;
+    list-style: none;
+    animation: langDropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes langDropdownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.lang-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--shop-ink);
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: background .18s ease;
+}
+.lang-dropdown-item:hover, .lang-dropdown-item.active {
+    background: var(--shop-sand);
+    color: var(--shop-green);
+    font-weight: 600;
+}
+.lang-code-badge {
+    display: inline-block;
+    min-width: 22px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--shop-muted);
+    letter-spacing: .05em;
+}
+.lang-dropdown-item.active .lang-code-badge {
+    color: var(--shop-green);
+}
+.lang-name { flex: 1; font-size: 12px; }
+
+.bag-button { display: inline-flex; gap: 8px; align-items: center; border-left: 1px solid var(--shop-line); padding-left: 14px; }
 .bag-count { min-width: 21px; height: 21px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--shop-green); color: #fff; font-size: 10px; letter-spacing: 0; }
+
 
 .shop-hero { overflow: hidden; background: var(--shop-sand); }
 .shop-hero-grid { min-height: 560px; display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 64px; }
@@ -164,7 +240,10 @@
     .shop-header-inner { min-height: 66px; gap: 12px; }
     .shop-brand img { width: 120px; }
     .shop-nav { display: none; }
-    .shop-header-actions { margin-left: auto; }
+    .mobile-header-shop-btn { display: inline-flex; }
+    .shop-header-actions { margin-left: auto; gap: 10px; }
+    .mobile-nav-toggle { display: flex; }
+    .mobile-drawer { z-index: 1000; }
     .shop-hero-grid { min-height: 0; display: flex; flex-direction: column; gap: 0; }
     .shop-hero-copy { padding: 66px 0 30px; }
     .shop-hero h1 { font-size: 58px; }
